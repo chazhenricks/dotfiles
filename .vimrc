@@ -17,6 +17,7 @@ Plugin 'VundleVim/Vundle.vim'
 " plugin on GitHub repo
 " Plugin 'tpope/vim-fugitive'
   Plugin 'scrooloose/nerdtree'
+  Plugin 'rafi/awesome-vim-colorschemes'
 
 
 
@@ -43,6 +44,7 @@ filetype plugin indent on    " required
 
 "Turn on syntax highlighting 
 syntax on
+colorscheme sierra
 
 "Show line numbers 
 set number

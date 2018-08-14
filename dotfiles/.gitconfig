@@ -1,0 +1,12 @@
+[core]
+	autocrlf = true
+[user]
+	email = chaz.henricks@cot.tn.gov
+	name = Chaz Henricks
+[credential]
+	helper = /mnt/c/Program\\ Files/Git/mingw64/libexec/git-core/git-credential-wincred.exe
+[alias]
+	branch-name = "!git rev-parse --abbrev-ref HEAD"
+	latest = "!git pull origin $(git branch-name)"
+	publish = "!git push origin $(git branch-name)"
+	

@@ -1,0 +1,4 @@
+10.0	/usr/share/autojump
+10.0	/usr/share
+14.142135623730951	/usr
+14.142135623730951	/mnt

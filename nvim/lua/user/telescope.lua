@@ -11,6 +11,7 @@ telescope.setup {
     prompt_prefix = " ",
     selection_caret = " ",
     path_display = { "smart" },
+    file_ignore_patterns = { "node_modules", ".git" },
 
     mappings = {
       i = {
@@ -31,7 +32,7 @@ telescope.setup {
         ["<C-t>"] = actions.select_tab,
 
         ["<C-u>"] = actions.preview_scrolling_up,
-        ["<C-d>"] = actions.preview_scrolling_down,
+        ["<C-d>"] = actions.delete_buffer,
 
         ["<PageUp>"] = actions.results_scrolling_up,
         ["<PageDown>"] = actions.results_scrolling_down,
@@ -68,7 +69,7 @@ telescope.setup {
         ["G"] = actions.move_to_bottom,
 
         ["<C-u>"] = actions.preview_scrolling_up,
-        ["<C-d>"] = actions.preview_scrolling_down,
+        ["<C-d>"] = actions.delete_buffer,
 
         ["<PageUp>"] = actions.results_scrolling_up,
         ["<PageDown>"] = actions.results_scrolling_down,
@@ -87,7 +88,8 @@ telescope.setup {
     -- builtin picker
     find_files = {
       hidden = true
-    }
+    },
+
   },
   extensions = {
     -- Your extension configuration goes here:

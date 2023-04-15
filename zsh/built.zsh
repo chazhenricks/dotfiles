@@ -132,8 +132,6 @@ ownership-inPapi() {
     echo "refreshed inPAPI"
   fi
 }
-add-zsh-hook chpwd ownership-inPapi
-ownership-inPapi
 ## end inspections api spec ---
 
 

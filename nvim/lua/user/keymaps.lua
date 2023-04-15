@@ -1,4 +1,4 @@
--- Shorten function name
+
 local keymap = vim.keymap.set
 -- Silent keymap option
 local opts = { silent = true }
@@ -22,6 +22,15 @@ keymap("n", "<C-j>", "<C-w>j", opts)
 keymap("n", "<C-k>", "<C-w>k", opts)
 keymap("n", "<C-l>", "<C-w>l", opts)
 
+-- split panes 
+keymap("n", "<leader>-", "<C-w>s", opts)
+keymap("n", "<leader>\\", "<C-w>v", opts)
+
+
+--Manually re-balance available panes
+keymap("n", "<leader>fs", ":wincmd _<CR> :wincmd |<CR>", opts) -- make full size
+keymap("n", "<leader>=", ":wincmd =<CR>", opts) -- re-balance
+
 -- Resize with arrows
 keymap("n", "<C-Up>", ":resize -2<CR>", opts)
 keymap("n", "<C-Down>", ":resize +2<CR>", opts)
@@ -38,9 +47,6 @@ keymap("n", "<leader>h", "<cmd>nohlsearch<CR>", opts)
 -- Close buffers
 keymap("n", "<S-q>", "<cmd>Bdelete!<CR>", opts)
 
--- Move text up and down
-keymap("n", "<A-j>", "<Esc>:m .+1<CR>==gi", opts)
-keymap("n", "<A-k>", "<Esc>:m .-2<CR>==gi", opts) 
 
 -- Better paste
 keymap("v", "p", '"_dP', opts)
@@ -67,7 +73,10 @@ keymap("i", "kj", "<ESC>", opts)
 keymap("v", "<", "<gv", opts)
 keymap("v", ">", ">gv", opts)
 
+
 -- Move text up and down
+keymap("n", "<A-j>", ":m .+1<CR>==", opts)
+keymap("n", "<A-k>", ":m .-2<CR>==", opts) 
 keymap("v", "<A-j>", ":m .+1<CR>==", opts)
 keymap("v", "<A-k>", ":m .-2<CR>==", opts)
 
@@ -135,3 +144,10 @@ keymap("n", "<leader>j1", "<cmd>lua require('harpoon.ui').nav_file(1)<CR>")
 keymap("n", "<leader>j2", "<cmd>lua require('harpoon.ui').nav_file(2)<CR>")
 keymap("n", "<leader>j3", "<cmd>lua require('harpoon.ui').nav_file(3)<CR>")
 keymap("n", "<leader>j4", "<cmd>lua require('harpoon.term').gotoTerminal(1)<CR>")
+
+
+-- Copilot
+keymap("n", "<leader>ce", ":Copilot enable <CR>")
+keymap("n", "<leader>cd", ":Copilot disable <CR>")
+
+

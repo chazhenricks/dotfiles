@@ -40,7 +40,8 @@ fi
      #extract file name 
      file_name="$(basename "$file")"
 
-     echo "symlinking ${file_name}"
+     echo "symlinking ${file_name}" 
+
      #create symlink
      ln -sfn "$file" "$HOME/.local/bin/$file_name"
    fi

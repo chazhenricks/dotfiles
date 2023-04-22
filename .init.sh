@@ -1,6 +1,17 @@
 #!/bin/bash 
 
+# install homebrew
+if [ ! command -v brew &> /dev/null ]
+then
+  echo "Installing homebrew"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+else
+  echo "Homebrew already installed"
+fi
 
+
+# Install from Brewfile
+brew bundle --file=$HOME/dotfiles/Brewfile
 
 # symlink tmux config
 if [ ! -e "$HOME/.tmux.conf" ]; then

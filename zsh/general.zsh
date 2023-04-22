@@ -7,6 +7,10 @@ plugins=(git nvm)
 ############
 export PATH=$HOME/bin:/opt/homebrew/bin:/usr/local/bin:$PATH
 
+
+# Add .local/bin to path so we can execute custom scripts
+export PATH=$PATH:$HOME/.local/bin 
+
 ##############
 # oh-my-zsh #
 ##############

@@ -7,6 +7,8 @@ alias config='/usr/bin/git --git-dir=/Users/chaz.henricks/.cfg/ --work-tree=/Use
 
 alias c9="ssh cloud9"
 
+alias szsh="source $HOME/.zshrc"
+
 
 
 # AWS RDS credentials
@@ -23,3 +25,6 @@ alias ops_login='awslogin -db-login=ops-cla-soa-us-east-1 aws-developer'
 alias dev_login='awslogin -db-login=dev-cla-soa-us-east-1 aws-developer'
 alias staging_login='awslogin -db-login=staging-cla-soa-us-east-1 aws-developer'
 
+
+# Docker 
+alias docs="docker ps --format "table {{.Names}}\t{{.Command}}\t{{.Status}}""

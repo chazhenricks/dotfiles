@@ -43,6 +43,9 @@ nvim_tree.setup {
       },
     },
   },
+  filters = {
+    dotfiles = false
+  },
   diagnostics = {
     enable = true,
     show_on_dirs = true,
@@ -56,6 +59,7 @@ nvim_tree.setup {
   view = {
     width = 35,
     side = "left",
+    adaptive_size= true,
     mappings = {
       list = {
         { key = { "l", "<CR>", "o" }, cb = tree_cb "edit" },

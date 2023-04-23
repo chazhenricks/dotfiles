@@ -26,7 +26,6 @@
     conda         # conda virtualenv section
     pyenv         # Pyenv section
     dotnet        # .NET section
-    ember         # Ember.js section
     kubectl       # Kubectl context section
     terraform     # Terraform workspace section
     ibmcloud      # IBM Cloud section

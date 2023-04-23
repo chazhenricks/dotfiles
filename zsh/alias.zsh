@@ -8,8 +8,8 @@ alias config='/usr/bin/git --git-dir=/Users/chaz.henricks/.cfg/ --work-tree=/Use
 alias c9="ssh cloud9"
 
 alias szsh="source $HOME/.zshrc"
-
-
+alias path="echo $PATH | tr ':' '\n'"
+alias notes="cd $HOME/Documents/chaz/notes && nvim . "
 
 # AWS RDS credentials
 alias prod_db='awslogin -db=prod-cla-soa-us-east-1 prod-support'

@@ -33,20 +33,22 @@ export CPPFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include"
 # CD Path #
 ###########
 setopt auto_cd
-cdpath=($HOME/Documents/BuiltSource $HOME/Documents/chaz $HOME/Documents)
+cdpath=($HOME/Documents/BuiltSource $HOME/Documents/chaz $HOME/Documents $HOME)
 
 
 # General ZSH Settings
-
-ZSH_THEME="spaceship"
 HYPHEN_INSENSITIVE="true"
 
+
+# Startup oh-my-zsh
 source $ZSH/oh-my-zsh.sh
+
+# Setup Spaceship
+source "/usr/local/opt/spaceship/spaceship.zsh"
 
 # ##########
 # THE FUCK!?
 # ##########
-
 eval $(thefuck --alias)
 
 

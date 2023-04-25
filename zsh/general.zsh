@@ -40,12 +40,16 @@ cdpath=($HOME/Documents/BuiltSource $HOME/Documents/chaz $HOME/Documents $HOME)
 HYPHEN_INSENSITIVE="true"
 
 
+
+# Setup Spaceship
+# idk why but this is big mad on my work computer - opting to use the oh-my-zsh theme instead.
+ZSH_THEME="spaceship"
+
+
 # Startup oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
-# Setup Spaceship
-source "/usr/local/opt/spaceship/spaceship.zsh"
-
+# source "/opt/homebrew/opt/spaceship/spaceship.zsh"
 # ##########
 # THE FUCK!?
 # ##########
@@ -62,3 +66,5 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 export PATH="/opt/homebrew/opt/bzip2/bin:$PATH"
 export PATH="/opt/homebrew/opt/mysql@5.7/bin:$PATH"
+
+

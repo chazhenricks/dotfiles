@@ -7,6 +7,8 @@ local servers = {
 	"bashls",
 	"jsonls",
 	"yamlls",
+  "quick_lint_js",
+  "clangd"
 }
 
 local settings = {
@@ -50,3 +52,7 @@ for _, server in pairs(servers) do
 
 	lspconfig[server].setup(opts)
 end
+
+
+
+

@@ -42,3 +42,4 @@ vim.opt.formatoptions:remove({ "c", "r", "o" }) -- This is a sequence of letters
 vim.opt.linebreak = true
 vim.opt.relativenumber = true
 vim.opt.winbar = "%{%v:lua.require('user.winbar').eval()%}"
+vim.opt.autoread = true

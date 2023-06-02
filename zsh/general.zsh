@@ -16,6 +16,8 @@ export PATH=$PATH:$HOME/.local/bin
 ##############
 export ZSH="$HOME/.oh-my-zsh"
 
+ # lolz 
+ export HOMER="doh"
 
 ##########
 # python #

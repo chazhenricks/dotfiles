@@ -30,11 +30,11 @@ null_ls.setup {
       },
     },
     diagnostics.eslint_d,
-    formatting.clang_format.with({
-        extra_args = {
-          '--fallback-style=Google'
-        }
-      }),
-    diagnostics.clangd
-  }
+    formatting.clang_format.with {
+      extra_args = {
+        "--fallback-style=Google",
+      },
+    },
+    diagnostics.clang_check,
+  },
 }

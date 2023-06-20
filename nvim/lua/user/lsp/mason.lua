@@ -8,7 +8,8 @@ local servers = {
 	"jsonls",
 	"yamlls",
   "quick_lint_js",
-  "clangd"
+  "clangd",
+  "graphql"
 }
 
 local settings = {

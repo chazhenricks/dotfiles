@@ -11,6 +11,7 @@ alias c9="ssh cloud9"
 
 # AWS RDS credentials
 alias prod_db='awslogin -db=prod-cla-soa-us-east-1 prod-support'
+alias demo_db='awslogin -db=demo-cla-soa-us-east-1 prod-support'
 alias prod_bapi_db='awslogin -db=prod-cla-bapi-replica-us-east-1 prod-support'
 alias ops_bapi_db='awslogin -db=ops-cla-bapi-us-east-1 aws-developer'
 alias ops_db='awslogin -db=ops-cla-soa-us-east-1 aws-developer'

@@ -9,7 +9,8 @@ local servers = {
 	"yamlls",
   "quick_lint_js",
   "clangd",
-  "graphql"
+  "gopls"
+  
 }
 
 local settings = {
@@ -52,8 +53,20 @@ for _, server in pairs(servers) do
 	end
 
 	lspconfig[server].setup(opts)
+
+
+  lspconfig.gopls.setup { 
+    cmd = {"gopls"},
+    filetypes = {"go", "gomod", "gowork", "gotmpl"},
+    settings = {
+      gopls = {
+        completeUnimported = true,
+        usePlaceholders = true,
+        analyses = {
+          unusedparams = true
+        }
+      }
+    }
+  }
+
 end
-
-
-
-

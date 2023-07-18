@@ -26,6 +26,11 @@ mcd() {
   mkdir $1 && cd $_
 }
 
+# open tmux not in a session and open ito choose-tree
+tst() {
+  tmux attach\; choose-tree -swZ
+}
+
 
 function init_built_tools() {
     colima start

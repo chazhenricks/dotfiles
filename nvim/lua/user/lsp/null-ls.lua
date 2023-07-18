@@ -36,5 +36,6 @@ null_ls.setup {
       },
     },
     diagnostics.clang_check,
+    formatting.gofmt,
   },
 }

@@ -32,6 +32,14 @@ export CFLAGS="-I$(brew --prefix zlib)/include -I$(brew --prefix sqlite)/include
 export LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/bzip2/lib -L/opt/homebrew/opt/llvm/lib"
 export CPPFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include -I/opt/homebrew/opt/llvm/include"
 
+
+
+############
+# go shit # 
+# #########
+export GOPATH="$HOME/go"
+export PATH="$PATH:$GOPATH/bin"
+
 ###########
 # CD Path #
 ###########

@@ -39,7 +39,10 @@ keymap("n", "<C-Down>", ":resize +2<CR>", opts)
 keymap("n", "<C-Left>", ":vertical resize -2<CR>", opts)
 keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
 
--- Navigate buffers
+-- Make new file in current directory
+keymap("n", "<leader>nf", ":e %:h/")
+
+-- Navigate buffers<leader>nf
 keymap("n", "<S-l>", ":bnext<CR>", opts)
 keymap("n", "<S-h>", ":bprevious<CR>", opts)
 
@@ -142,3 +145,16 @@ keymap("n", "<leader>j4", "<cmd>lua require('harpoon.term').gotoTerminal(1)<CR>"
 keymap("n", "<leader>ce", ":Copilot enable <CR>")
 keymap("n", "<leader>cd", ":Copilot disable <CR>")
 keymap("i", "<C-J>", 'copilot#Accept("<CR>")', opts)
+
+
+-- Compile/run C file 
+keymap("n", "<leader>cr", ":terminal gcc % && ./a.out <CR>")
+
+-- Addind semicolon at the end of the line
+keymap("n", "<leader>;;", "A;<esc>o", opts)
+keymap("i", ";;", "<esc>A;<esc>o", opts)
+
+
+-- exist and insert new line above current 
+keymap("i", "<C-o>", "<esc>O", opts)
+keymap("i", "<C-]>", "{<CR>}<esc>O", opts)

@@ -44,7 +44,7 @@ export PATH="$PATH:$GOPATH/bin"
 # CD Path #
 ###########
 setopt auto_cd
-cdpath=($HOME/Documents/BuiltSource $HOME/Documents/chaz $HOME/Documents $HOME)
+cdpath=($HOME/BuiltSource $HOME/Documents/chaz $HOME/Documents $HOME)
 
 
 # General ZSH Settings

@@ -62,7 +62,6 @@ return packer.startup(function(use)
   use { "lunarvim/darkplus.nvim", commit = "13ef9daad28d3cf6c5e793acfc16ddbf456e1c83" }
   use "lunarvim/colorschemes" -- A bunch of colorschemes you can try out
 
-
   -- cmp plugins
   use { "hrsh7th/nvim-cmp", commit = "b0dff0ec4f2748626aae13f011d1a47071fe9abc" } -- The completion plugin
   use { "hrsh7th/cmp-buffer", commit = "3022dbc9166796b644a841a02de8dd1cc1d311fa" } -- buffer completions
@@ -88,40 +87,39 @@ return packer.startup(function(use)
 
   -- Treesitter
   use {
-    "nvim-treesitter/nvim-treesitter"}
+    "nvim-treesitter/nvim-treesitter",
+  }
 
   -- Git
   use { "lewis6991/gitsigns.nvim", commit = "f98c85e7c3d65a51f45863a34feb4849c82f240f" }
-  use { "tpope/vim-fugitive"}
+  use { "tpope/vim-fugitive" }
 
   -- Copilot
-  use {"github/copilot.vim"}
+  use { "github/copilot.vim" }
 
   -- DAP
   use { "mfussenegger/nvim-dap", commit = "6b12294a57001d994022df8acbe2ef7327d30587" }
   use { "rcarriga/nvim-dap-ui", commit = "1cd4764221c91686dcf4d6b62d7a7b2d112e0b13" }
   use { "ravenxrz/DAPInstall.nvim", commit = "8798b4c36d33723e7bba6ed6e2c202f84bb300de" }
 
-
--- Debuggers 
-   use { "mfussenegger/nvim-dap-python" } -- Run/Debug a python app with launch.json
+  -- Debuggers
+  use { "mfussenegger/nvim-dap-python" } -- Run/Debug a python app with launch.json
   use { "David-Kunz/jester" } -- Run/Debug Jest tests
-  use { "mxsdev/nvim-dap-vscode-js", requires = {"mfussenegger/nvim-dap"} } -- Run/Debug a node app
+  use { "mxsdev/nvim-dap-vscode-js", requires = { "mfussenegger/nvim-dap" } } -- Run/Debug a node app
   use {
-  "microsoft/vscode-js-debug",
-  opt = true,
-  run = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out" 
-}
- 
+    "microsoft/vscode-js-debug",
+    opt = true,
+    run = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
+  }
+
   -- which-key
-  use{"folke/which-key.nvim"}
+  use { "folke/which-key.nvim" }
 
-
--- Harppoon (WIP)
-  use{"ThePrimeagen/harpoon"}
+  -- Harppoon (WIP)
+  use { "ThePrimeagen/harpoon" }
 
   -- Tmux/Vim integration
-  use{"christoomey/vim-tmux-navigator"}
+  use { "christoomey/vim-tmux-navigator" }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

@@ -10,6 +10,7 @@ local servers = {
   "quick_lint_js",
   "clangd",
   "gopls",
+  "terraformls",
 }
 
 local settings = {

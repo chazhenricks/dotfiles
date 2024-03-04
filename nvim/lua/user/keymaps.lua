@@ -93,6 +93,13 @@ keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
 -- make current bash file executable within vim
 keymap("n", "<leader>x", "<cmd>!chmod +x %<CR>", opts)
 
+-- alias for quit
+keymap("n", "<leader>q", "<cmd>q<CR>", opts)
+
+-- alias' for write all and quit all
+keymap("n", "<leader>qq", "<cmd>qa<CR>", opts)
+keymap("n", "<leader>ww", "<cmd>wa<CR>", opts)
+
 -- Plugins --
 
 -- NvimTree
@@ -105,30 +112,16 @@ keymap("n", "<leader>fp", ":Telescope projects<CR>", opts)
 keymap("n", "<leader>fb", ":Telescope buffers<CR>", opts)
 
 -- Git
-keymap("n", "<leader>gg", "<cmd>lua _LAZYGIT_TOGGLE()<CR>", opts)
+keymap("n", "<leader>gg", "<cmd>G<CR>", opts)
 keymap("n", "<leader>gb", "<cmd>Gitsigns blame_line <cr>", opts)
 keymap("n", "<leader>gs", "<cmd>Git status<CR>", opts)
 keymap("n", "<leader>gco", ":Git checkout<space>", opts)
-keymap("n", "<leader>gc", ":Git checkout<space>", opts)
-keymap("n", "<Leader>gc", ":Git commit -v -q<CR>", opts) -- commits all files
-keymap("n", "<Leader>gt", ":Git commit -v -q %:p<CR>", opts) -- commits current file
-keymap("n", "<leader>ga", ":Git add %:p <CR><CR>", opts) -- adds current file
-keymap("n", "<leader>gaa", ":Git add . <CR><CR>", opts)
+keymap("n", "<leader>gcb", ":Git checkout<space>", opts)
+keymap("n", "<leader>gp", ":Git push", opts)
 
 -- Comment
 keymap("n", "<leader>/", "<cmd>lua require('Comment.api').toggle.linewise.current()<CR>", opts)
 keymap("x", "<leader>/", "<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>", opts)
-
--- DAP
-keymap("n", "<leader>db", "<cmd>lua require'dap'.toggle_breakpoint()<cr>", opts)
-keymap("n", "<leader>dc", "<cmd>lua require'dap'.continue()<cr>", opts)
-keymap("n", "<leader>di", "<cmd>lua require'dap'.step_into()<cr>", opts)
-keymap("n", "<leader>do", "<cmd>lua require'dap'.step_over()<cr>", opts)
-keymap("n", "<leader>dO", "<cmd>lua require'dap'.step_out()<cr>", opts)
-keymap("n", "<leader>dr", "<cmd>lua require'dap'.repl.toggle()<cr>", opts)
-keymap("n", "<leader>dl", "<cmd>lua require'dap'.run_last()<cr>", opts)
-keymap("n", "<leader>du", "<cmd>lua require'dapui'.toggle()<cr>", opts)
-keymap("n", "<leader>dt", "<cmd>lua require'dap'.terminate()<cr>", opts)
 
 -- Lsp
 keymap("n", "<leader>lf", "<cmd>lua vim.lsp.buf.format{ async = true }<cr>", opts)
@@ -146,15 +139,13 @@ keymap("n", "<leader>ce", ":Copilot enable <CR>")
 keymap("n", "<leader>cd", ":Copilot disable <CR>")
 keymap("i", "<C-J>", 'copilot#Accept("<CR>")', opts)
 
-
--- Compile/run C file 
+-- Compile/run C file
 keymap("n", "<leader>cr", ":terminal gcc % && ./a.out <CR>")
 
 -- Addind semicolon at the end of the line
 keymap("n", "<leader>;;", "A;<esc>o", opts)
 keymap("i", ";;", "<esc>A;<esc>o", opts)
 
-
--- exist and insert new line above current 
+-- exist and insert new line above current
 keymap("i", "<C-o>", "<esc>O", opts)
 keymap("i", "<C-]>", "{<CR>}<esc>O", opts)

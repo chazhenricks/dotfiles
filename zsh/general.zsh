@@ -79,3 +79,8 @@ export PATH="/opt/homebrew/opt/bzip2/bin:$PATH"
 export PATH="/opt/homebrew/opt/mysql@5.7/bin:$PATH"
 
 
+
+# ##############
+# misc k8s stuff 
+# ##############
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"

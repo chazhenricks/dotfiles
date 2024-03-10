@@ -43,8 +43,8 @@ alias prod_bapi='AWS_PROFILE=Built-Root/BuiltSupport_067182029689 awslogin mysql
 alias prod_soa='AWS_PROFILE=Built-Root/BuiltSupport_067182029689 awslogin mysql-login --db prod-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
 
 #Demo
-alias demo_bapi='AWS_PROFILE=Built-Root/BuiltSupport_067182029689 awslogin mysql-login --db demo-cla-bapi8-us-east-1 --dbuser SamlDbReadAccess'
-alias demo_soa='AWS_PROFILE=Built-Root/BuiltSupport_067182029689 awslogin mysql-login --db demo-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
+alias demo_bapi='assume Built-Root/BuiltSupport_067182029689 && awslogin mysql-login --db demo-cla-bapi8-us-east-1 --dbuser SamlDbReadAccess'
+alias demo_soa='assume Built-Root/BuiltSupport_067182029689 && awslogin mysql-login --db demo-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
 
 
 

@@ -135,9 +135,17 @@ keymap("n", "<leader>j3", "<cmd>lua require('harpoon.ui').nav_file(3)<CR>")
 keymap("n", "<leader>j4", "<cmd>lua require('harpoon.term').gotoTerminal(1)<CR>")
 
 -- Copilot
+vim.g.copilot_no_tab_map = true
 keymap("n", "<leader>ce", ":Copilot enable <CR>")
 keymap("n", "<leader>cd", ":Copilot disable <CR>")
-keymap("i", "<C-J>", 'copilot#Accept("<CR>")', opts)
+-- needed to call the cmp map to do copilot accept.
+-- see cmp.lua for more info
+keymap("i", "<Plug>(vimrc:copilot-dummy-map)", 'copilot#Accept("")', {
+  expr = true,
+  replace_keycodes = true,
+  silent = true,
+  desc = "Copilot dummy map",
+})
 
 -- Compile/run C file
 keymap("n", "<leader>cr", ":terminal gcc % && ./a.out <CR>")

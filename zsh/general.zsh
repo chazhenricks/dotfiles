@@ -1,5 +1,5 @@
 # Plugins
-plugins=(git nvm)
+plugins=(git asdf)
 
 
 ############

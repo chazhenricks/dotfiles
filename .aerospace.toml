@@ -1,0 +1,147 @@
+# Reference: https://github.com/i3/i3/blob/next/etc/config
+
+enable-normalization-flatten-containers = false
+enable-normalization-opposite-orientation-for-nested-containers = false
+
+[mode.main.binding]
+alt-enter = 'exec-and-forget open -n /Applications/iTerm.app'
+
+alt-j = 'focus left'
+alt-k = 'focus down'
+alt-l = 'focus up'
+alt-semicolon = 'focus right'
+
+alt-shift-j = 'move left'
+alt-shift-k = 'move down'
+alt-shift-l = 'move up'
+alt-shift-semicolon = 'move right'
+
+alt-h = 'split horizontal'
+alt-v = 'split vertical'
+
+alt-f = 'fullscreen'
+
+alt-s = 'layout v_accordion' # 'layout stacking' in i3
+alt-w = 'layout h_accordion' # 'layout tabbed' in i3
+alt-e = 'layout tiles horizontal vertical' # 'layout toggle split' in i3
+
+alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
+
+# `focus parent`/`focus child` are not yet supported, and it's not clear whether they
+# should be supported at all https://github.com/nikitabobko/AeroSpace/issues/5
+# alt-a = 'focus parent'
+
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
+
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
+alt-shift-6 = 'move-node-to-workspace 6'
+alt-shift-7 = 'move-node-to-workspace 7'
+alt-shift-8 = 'move-node-to-workspace 8'
+alt-shift-9 = 'move-node-to-workspace 9'
+
+alt-shift-r = 'reload-config'
+
+alt-r = 'mode resize'
+
+[mode.resize.binding]
+h = 'resize width -50'
+j = 'resize height +50'
+k = 'resize height -50'
+l = 'resize width +50'
+enter = 'mode main'
+esc = 'mode main'
+
+
+
+################################
+# Asssign Workspaces To Monitors
+################################
+# In more than 2 monitors, 1,2,3 map to left-to-right monitors 
+# When two monitors, main == laptop, secondary == external
+
+[workspace-to-monitor-force-assignment]
+1 = [2, 'secondary', 'main'] # terminals
+2 = [1, 'main'] # browsers
+3 = 'main' # chat
+4 = 'main' # finder
+5 = 'main'
+6 = 'main'
+7 = [2, 'secondary', 'main']
+8 = 'main'
+9 = 'main'
+
+
+############################
+# Assign Apps To Workspaces
+############################
+
+# Terminals on 1
+[[on-window-detected]]
+if.app-id = 'com.googlecode.iterm2'
+run = 'move-node-to-workspace 1' 
+
+# Browsers on 2
+[[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+run = 'move-node-to-workspace 2' 
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari'
+run = 'move-node-to-workspace 2' 
+
+# Chat on 3
+[[on-window-detected]]
+if.app-id = 'com.tinyspeck.slackmacgap'
+run = 'move-node-to-workspace 3' 
+
+
+# Finder/preview On 4 and floating
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = ['layout floating', 'move-node-to-workspace 4' ]
+
+if.app-id = 'com.apple.Preview'
+run = ['layout floating', 'move-node-to-workspace 4' ]
+
+# Datagrip on 5 
+[[on-window-detected]]
+if.app-id = 'com.jetbrains.datagrip'
+run = 'move-node-to-workspace 5'
+
+
+# Video On 6 
+[[on-window-detected]]
+if.app-id = 'app.multi.multi'
+run = 'move-node-to-workspace 6'
+
+# Multi/Zoom Screenshare on 7 
+[[on-window-detected]]
+if.app-id = 'app.multi.ScreenshareDockTile'
+run = 'move-node-to-workspace 7'
+
+
+[[on-window-detected]]
+if.app-id = 'us.zoom.xos'
+run = 'move-node-to-workspace 6' 
+
+#TickTick on 8 
+[[on-window-detected]]  
+if.app-id = 'com.TickTick.task.mac'
+run = 'move-node-to-workspace 8'
+
+# Spotify on 9
+[[on-window-detected]]
+if.app-id = 'com.spotify.client'
+run = 'move-node-to-workspace 9' 

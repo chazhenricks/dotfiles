@@ -61,7 +61,7 @@ return packer.startup(function(use)
   -- Colorschemes
   use { "lunarvim/darkplus.nvim", commit = "13ef9daad28d3cf6c5e793acfc16ddbf456e1c83" }
   use "lunarvim/colorschemes" -- A bunch of colorschemes you can try out
-  use "AlexvZyl/nordic.nvim"
+  use { "AlexvZyl/nordic.nvim", commit = "5e2813e7d17" }
   -- cmp plugins
   use { "hrsh7th/nvim-cmp" } -- The completion plugin
   use { "hrsh7th/cmp-buffer" } -- buffer completions
@@ -105,6 +105,22 @@ return packer.startup(function(use)
   -- Tmux/Vim integration
   use { "christoomey/vim-tmux-navigator" }
 
+  -- DAP
+  use {
+    "mfussenegger/nvim-dap",
+    requires = {
+      "rcarriga/nvim-dap-ui",
+      "mxsdev/nvim-dap-vscode-js",
+      "David-Kunz/jester",
+    },
+  }
+
+  -- Debuggers
+  use {
+    "microsoft/vscode-js-debug",
+    opt = true,
+    run = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
+  }
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
   if PACKER_BOOTSTRAP then

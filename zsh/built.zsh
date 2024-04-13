@@ -3,10 +3,118 @@
 ##################
 
 
-###########
-# aliases #
-###########
-alias c9="ssh cloud9"
+##############
+# kubernetes #
+##############
+
+# start kubernetes dev environment 
+k8s_yesterday(){
+    assume
+    cd $HOME/BuiltSource/kubernetes-developer-environment/single-stack/ 
+    make start_day
+    cd -
+}
+
+k8s_new(){
+    assume
+    cd $HOME/BuiltSource/kubernetes-developer-environment/single-stack/ 
+    make update_stack 
+    cd -
+  }
+
+# destroy a pod 
+k8s_destroy() {
+helmfile destroy -l name=$1
+}
+
+# apply a pod
+k8s_apply(){
+helmfile apply -l name=$1
+}
+
+k8s_managed(){
+  kubectl get managed | grep 'chaz-henricks'
+}
+
+k8s_mysql_password(){
+  kubectl get secret --namespace $(whoami | sed 's/\./-/g') mysql -o jsonpath="{.data.mysql-root-password}" | base64 --decode; echo
+}
+
+k8s_endpoints(){
+  kubectl describe ingress --namespace $(whoami | sed 's/\./-/g') | grep -i host -A3
+}
+function kick_pod() {
+    set -e -o pipefail
+
+    LABEL=$1
+    LABEL_KEY=${2:-app.kubernetes.io/name}
+
+    usage() {
+        echo "Usage: $0 <label> [label-key]"
+        echo "  label: the value of the label to delete"
+        echo "  label-key: the label key to delete (default: app.kubernetes.io/name)"
+    }
+
+    if [[ -z $LABEL ]]; then
+        >&2 echo "You must provide a label to delete"
+        usage;
+        exit 1;
+    fi
+
+    POD=$(kubectl get pods -l app.kubernetes.io/name=$LABEL -o name)
+    if [[ -z $POD ]]; then
+        >&2 echo "No pod found with label key: $LABEL_KEY=$LABEL"
+
+        # get all pods' label values with label key
+        AVAILABLE_LABELS=$(kubectl get pods -o json | jq -r ".items[].metadata.labels[\"$LABEL_KEY\"]" | sort -u)
+        if [[ -z $AVAILABLE_LABELS ]]; then
+            >&2 echo "No labels found with label key: $LABEL_KEY"
+        else
+            echo "Available pod labels with label key: $LABEL_KEY"
+            PREFIX="  + "
+            while IFS= read -r label; do
+                echo "${PREFIX}${label}"
+            done <<< "$AVAILABLE_LABELS"
+        fi
+        exit 0;
+    fi
+
+    echo "Deleting pod with label: $LABEL_KEY=$LABEL ..."
+    kubectl delete $POD
+    exit 0;
+}
+
+function init_built_tools() {
+    colima start
+    cd $HOME/BuiltSource/developer-environment
+    awslogin aws-developer
+    mv $HOME/.aws/aws-developer $HOME/.aws/credentials
+    pipenv run built_up -p minimal
+}
+
+function prod_extract_loan() {
+    cd $HOME/BuiltSource/case_sensitive/built-tools
+    ./bin/built extract loan $1 -o "$1.sql"
+    mv $HOME/.built/cache/$1.sql $HOME/BuiltSource/prod-extracts/$1.sql
+}
+
+function prod_extract_lender() {
+    cd $HOME/BuiltSource/case_sensitive/built-tools
+    ./bin/built extract lender $1 -o "$1.sql"
+    mv $HOME/.built/cache/$1.sql $HOME/BuiltSource/prod-extracts/$1.sql
+}
+
+function prod_extract_user() {
+    cd $HOME/BuiltSource/case_sensitive/built-tools
+    ./bin/built extract user $1 -o "$1.sql"
+    mv $HOME/.built/cache/$1.sql $HOME/BuiltSource/prod-extracts/$1.sql
+}
+
+load_extract() {
+    mysql -u root -h 127.0.0.1 --port 13306 -p local_built_api < ./$1.sql
+}
+
+
 
 
 # AWS RDS credentials
@@ -39,8 +147,11 @@ alias ops_soa='AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db op
 alias staging_bapi='AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db staging-cla-bapi8-us-east-1 --dbuser SamlDbReadAccess'
 alias staging_soa='AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db staging-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
 #PROD
-alias prod_bapi='AWS_PROFILE=Built-Root/BuiltSupport_067182029689 awslogin mysql-login --db prod-cla-bapi8-replica-us-east-1 --dbuser SamlDbReadAccess'
-alias prod_soa='AWS_PROFILE=Built-Root/BuiltSupport_067182029689 awslogin mysql-login --db prod-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
+alias prod_assume='assume Built-Root/BuiltSupport_067182029689'
+alias prod_bapi='prod_assume && AWS_PROFILE=Built-Root/BuiltSupport_067182029689 awslogin mysql-login --db prod-cla-bapi8-replica-us-east-1 --dbuser SamlDbReadAccess'
+
+
+alias prod_soa='prod_assume && AWS_PROFILE=Built-Root/BuiltSupport_067182029689 awslogin mysql-login --db prod-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
 
 #Demo
 alias demo_bapi='assume Built-Root/BuiltSupport_067182029689 && awslogin mysql-login --db demo-cla-bapi8-us-east-1 --dbuser SamlDbReadAccess'
@@ -107,48 +218,6 @@ alias ripa="built_service_reset inspections-product-api"
 alias ris="built_service_reset inspections-service"
 alias risd="built_service_reset --include-db inspections-service"
 
-
-
-################
-# c9 functions #
-################
-reset_current  () {
-        reset ${PWD##*/}
- }
-
-reset () {
-        built_service_reset $1
-}
-
-reset_db () {
-        built_service_reset --include-db $1
-}
-
-seed () {
-         mysql -u root -h 127.0.0.1 --port 13306 -p local_built_api < $1
- }
-
- dump(){
-  mysql -u root -h 127.0.0.1 --port 13306 -p local_built_api < ./$1.sql
- }
-
- logs_current () {
-        logs ${PWD##*/}
- }
-
- logs () {
-        docker logs -f $1
- }
-
-  ecr_login() {
- aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 833816692833.dkr.ecr.us-east-1.amazonaws.com
-}
-
-reset_inspections(){
-        built_up --clean -p inspections
-        built_service_reset geolocations-service
-
-}
 
 
 ## inspections api spec ---

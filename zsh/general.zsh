@@ -54,7 +54,7 @@ HYPHEN_INSENSITIVE="true"
 
 # Setup Spaceship
 # idk why but this is big mad on my work computer - opting to use the oh-my-zsh theme instead.
-ZSH_THEME="spaceship"
+ZSH_THEME="miloshadzic"
 
 
 # Startup oh-my-zsh
@@ -84,3 +84,4 @@ export PATH="/opt/homebrew/opt/mysql@5.7/bin:$PATH"
 # misc k8s stuff 
 # ##############
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+export K8s_TEAM_NAME=marketplace

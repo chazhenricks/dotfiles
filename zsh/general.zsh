@@ -12,6 +12,15 @@ export PATH=$HOME/bin:/opt/homebrew/bin:/usr/local/bin:$PATH
 # Add .local/bin to path so we can execute custom scripts
 export PATH=$PATH:$HOME/.local/bin 
 
+# sets the defailt editor to be neovim 
+export EDITOR=nvim
+
+# set the Mason directory in the path so we can use LSPs in the terminal if need be 
+export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
+
+
+
+
 ##############
 # oh-my-zsh #
 ##############
@@ -28,9 +37,10 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 export PYTHON_CONFIGURE_OPTS="--with-openssl=$(brew --prefix openssl)"
-export CFLAGS="-I$(brew --prefix zlib)/include -I$(brew --prefix sqlite)/include -I$(brew --prefix bzip2)/include"
-export LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/bzip2/lib -L/opt/homebrew/opt/llvm/lib"
-export CPPFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include -I/opt/homebrew/opt/llvm/include"
+export CFLAGS="-I$(brew --prefix zlib)/include -I$(brew --prefix sqlite)/include -I$(brew --prefix bzip2)/include -I$(brew --prefix libffi)/include"
+export LDFLAGS="-L$(brew --prefix zlib)/lib -L$(brew --prefix bzip2)/lib -L/opt/homebrew/opt/llvm/lib -L$(brew --prefix libffi)/lib"
+export CPPFLAGS="-I$(brew --prefix zlib)/include -I$(brew --prefix bzip2)/include -I/opt/homebrew/opt/llvm/include"
+export PKG_CONFIG_PATH="$(brew --prefix libffi)/lib/pkgconfig:/opt/homebrew/opt/llvm/lib/pkgconfig:$PKG_CONFIG_PATH"
 
 
 
@@ -80,8 +90,12 @@ export PATH="/opt/homebrew/opt/mysql@5.7/bin:$PATH"
 
 
 
-# ##############
-# misc k8s stuff 
-# ##############
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-export K8s_TEAM_NAME=marketplace
+# ####################
+# Glow Markdown Viewer
+# ####################
+export GLAMOUR_STYLE='../glow-style.json'
+
+
+# #########
+# pomodoro 
+# #########

@@ -18,7 +18,7 @@ require("lspconfig").clangd.setup { capabilities = capabilities }
 
 -- https://github.com/prettier-solidity/prettier-plugin-solidity
 null_ls.setup {
-  debug = true,
+  debug = false,
   sources = {
     formatting.prettier.with {
       extra_filetypes = { "toml" },
@@ -32,7 +32,17 @@ null_ls.setup {
         "--ignore=W391",
       },
     },
-    diagnostics.eslint_d,
+    diagnostics.eslint_d.with {
+      condition = function(utils)
+        return utils.root_has_file {
+          ".eslintrc.js",
+          ".eslintrc.json",
+          ".eslintrc",
+          ".eslintrc.cjs",
+          "eslint.config.js",
+        }
+      end,
+    },
     formatting.clang_format.with {
       extra_args = {
         "--fallback-style=Google",

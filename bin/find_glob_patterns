@@ -1,0 +1,65 @@
+#!/bin/zsh
+
+# Check if a directory argument is provided
+if [ -z "$1" ]; then
+  echo "Usage: $0 <relative_filepath>"
+  exit 1
+fi
+
+# Set the directory to search
+search_dir=$1
+
+# Check if the directory exists
+if [ ! -d "$search_dir" ]; then
+  echo "Error: Directory '$search_dir' does not exist."
+  exit 1
+fi
+
+# Enable extended globbing for more advanced pattern matching
+setopt EXTENDED_GLOB
+
+# Array to hold GLOB patterns that match files
+matched_patterns=()
+
+# Function to add unique patterns to the array
+add_pattern() {
+  local pattern=$1
+  if [[ ! " ${matched_patterns[@]} " == *" $pattern "* ]]; then
+    matched_patterns+=("$pattern")
+  fi
+}
+
+# Corrected GLOB patterns without leading ./
+# Search for test files with .test.* and .spec.*
+if ls "$search_dir"**/*.test.*(N) 1>/dev/null 2>&1; then
+  add_pattern "**/*.test.*"
+fi
+
+if ls "$search_dir"**/*.spec.*(N) 1>/dev/null 2>&1; then
+  add_pattern "**/*.spec.*"
+fi
+
+# Search for mocks and fixtures based on the criteria
+if ls "$search_dir"**/__mocks__/*(N) 1>/dev/null 2>&1; then
+  add_pattern "**/__mocks__/*"
+fi
+
+if ls "$search_dir"**/*.mock.*(N) 1>/dev/null 2>&1; then
+  add_pattern "**/*.mock.*"
+fi
+
+if ls "$search_dir"**/*.fixture.*(N) 1>/dev/null 2>&1; then
+  add_pattern "**/*.fixture.*"
+fi
+
+# Output the results
+echo "Matching GLOB patterns found:"
+for pattern in "${matched_patterns[@]}"; do
+  echo "$pattern"
+done
+
+# Check if no patterns were matched
+if [ ${#matched_patterns[@]} -eq 0 ]; then
+  echo "No matching GLOB patterns found."
+fi
+

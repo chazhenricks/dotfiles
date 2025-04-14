@@ -2,7 +2,7 @@ local servers = {
   "lua_ls",
   "cssls",
   "html",
-  "tsserver",
+  "ts_ls",
   "pyright",
   "bashls",
   "jsonls",
@@ -65,6 +65,15 @@ for _, server in pairs(servers) do
         usePlaceholders = true,
         analyses = {
           unusedparams = true,
+        },
+      },
+    },
+  }
+  lspconfig.lua_ls.setup {
+    settings = {
+      Lua = {
+        diagnostics = {
+          globals = { "vim" },
         },
       },
     },

@@ -7,20 +7,57 @@
 # kubernetes #
 ##############
 
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+export K8S_TEAM_NAME="full-app"
+export K8S_SHARED_STACK="full-app"
+export K8S_NAMESPACE_OVERRIDE="chahen"
+export NS=$(whoami | awk -F. '{print substr($1, 1, 3) substr($2, 1, 3)}')
+export NAMESPACE="chahen"
+export K8S_NAMESPACE="chahen"
+export GRANTED_NO_KEYRING=true
+
+
 # start kubernetes dev environment 
 k8s_yesterday(){
     assume
-    cd $HOME/BuiltSource/kubernetes-developer-environment/single-stack/ 
+    AWS_PROFILE=built_dev_eks/BuiltAdmin aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 833816692833.dkr.ecr.us-east-1.amazonaws.com
     make start_day
-    cd -
 }
 
 k8s_new(){
     assume
-    cd $HOME/BuiltSource/kubernetes-developer-environment/single-stack/ 
-    make update_stack 
-    cd -
+    AWS_PROFILE=built_dev_eks/BuiltAdmin aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 833816692833.dkr.ecr.us-east-1.amazonaws.com
+    # cd $HOME/BuiltSource/kubernetes-developer-environment/single-stack/ 
+    # git checkout main 
+    # git pull && say 'git pull succeeded' || say 'FUCK! git pull failed' 
+    @kubectl --namespace $NAMESPACE scale deployments -l "app.kubernetes.io/managed-by=Helm" --replicas=1 2>/dev/null || true
+    @kubectl --namespace $NAMESPACE scale deployments -l type=flink-native-kubernetes --replicas=1 2>/dev/null || true
+    helmfile deps && say 'helmfile deps succeeded' || say 'FUCK! helmfile deps failed'  
+    helmfile apply && say 'helmfile apply succeeded' || reapply
+    make frontend-sync profile=built_dev_eks/BuiltAdmin && say 'frontend sync complete' || say 'oh my god, frontend sync failed'
   }
+
+
+k8s_fe(){
+  if [ -n "$1" ]; then 
+    echo "running: make frontend-upload profile=built_dev_eks/BuiltAdmin repo=$1 static_files_path=/Users/chaz.henricks/BuiltSource/$1/dist"
+    make frontend-upload profile=built_dev_eks/BuiltAdmin repo=$1 static_files_path=/Users/chaz.henricks/BuiltSource/$1/dist
+  else 
+    echo "running: make frontend-sync profile=built_dev_eks/BuiltAdmin"
+    make frontend-sync profile=built_dev_eks/BuiltAdmin 
+  fi
+}
+
+reapply(){
+  helmfile apply && say 'shit yeah helmfile apply succeded' || say 'fuck helmfile apply failed'
+}
+
+reload_auth(){
+  cd ~/BuiltSource/kubernetes-developer-environment/single-stack/
+  make auth-init ROOT_PATH=~/BuiltSource/
+  make auth-load
+  cd -
+}
 
 # destroy a pod 
 k8s_destroy() {
@@ -33,15 +70,15 @@ helmfile apply -l name=$1
 }
 
 k8s_managed(){
-  kubectl get managed | grep 'chaz-henricks'
+  kubectl get managed | grep 'chahen'
 }
 
 k8s_mysql_password(){
-  kubectl get secret --namespace $(whoami | sed 's/\./-/g') mysql -o jsonpath="{.data.mysql-root-password}" | base64 --decode; echo
+kubectl get secret mysql-creds --namespace $(kubectl config view --minify --output 'jsonpath={..namespace}') -o yaml | yq .data.MYSQL_PASSWORD | base64 -d
 }
 
 k8s_endpoints(){
-  kubectl describe ingress --namespace $(whoami | sed 's/\./-/g') | grep -i host -A3
+  kubectl describe ingress --namespace chahen | grep -i host -A3
 }
 function kick_pod() {
     set -e -o pipefail
@@ -117,44 +154,29 @@ load_extract() {
 
 
 
-# AWS RDS credentials
-# alias prod_db='awslogin -db=prod-cla-soa-us-east-1 prod-support'
-# alias prod8_db='awslogin -db=prod-cla-soa8-us-east-1 prod-support'
-# alias demo_db='awslogin -db=demo-cla-soa-us-east-1 prod-support'
-# alias demo8_db='awslogin -db=demo-cla-soa8-us-east-1 prod-support'
-# alias prod_bapi_db='awslogin -db=prod-cla-bapi-replica-us-east-1 prod-support'
-# alias prod_bapi8_db='awslogin -db=prod-cla-bapi8-replica-us-east-1 prod-support'
-# alias ops_bapi_db='awslogin -db=ops-cla-bapi-us-east-1 aws-developer'
-# alias ops_bapi8_db='awslogin -db=ops-cla-bapi8-us-east-1 aws-developer'
-# alias ops_db='awslogin -db=ops-cla-soa-us-east-1 aws-developer'
-# alias ops8_db='awslogin -db=ops-cla-soa8-us-east-1 aws-developer'
-# alias dev_db='awslogin -db=dev-cla-soa-us-east-1 aws-developer'
-# alias dev8_db='awslogin -db=dev-cla-soa8-us-east-1 aws-developer'
-# alias staging_db='awslogin -db=staging-cla-soa-us-east-1 aws-developer'
-# alias staging8_db='awslogin -db=staging-cla-soa8-us-east-1 aws-developer'
-# alias staging_bapi_db='awslogin -db=staging-cla-bapi-us-east-1 aws-developer'
-# alias staging_bapi8_db='awslogin -db=staging-cla-bapi8-us-east-1 aws-developer'
-
 
 # New Awslogin format 
-# Dev
+# THIS REFRESH COMMAND DOESNT WORK VERY WELL. 
+# alias refresh_db_creds='granted sso generate --sso-region us-east-1 --source aws-sso https://d-9067662d10.awsapps.com/start/\# > ~/.aws/config'
+
 alias dev_bapi='AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db dev-cla-bapi8-us-east-1 --dbuser SamlDbReadAccess'
 alias dev_soa='AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db dev-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
+
 # OPS
 alias ops_bapi='AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db ops-cla-bapi8-us-east-1 --dbuser SamlDbReadAccess'
 alias ops_soa='AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db ops-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
+
 # STAGING 
-alias staging_bapi='AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db staging-cla-bapi8-us-east-1 --dbuser SamlDbReadAccess'
-alias staging_soa='AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db staging-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
+alias staging_assume='assume AWS_PROFILE=Built-Dev/BuiltDeveloper'
+alias staging_bapi='staging_assume && AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db staging-cla-bapi8-us-east-1 --dbuser SamlDbReadAccess'
+alias staging_soa='staging_assume && AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db staging-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
+
 #PROD
-alias prod_assume='assume Built-Root/BuiltSupport_067182029689'
-alias prod_bapi='prod_assume && AWS_PROFILE=Built-Root/BuiltSupport_067182029689 awslogin mysql-login --db prod-cla-bapi8-replica-us-east-1 --dbuser SamlDbReadAccess'
-
-
-alias prod_soa='prod_assume && AWS_PROFILE=Built-Root/BuiltSupport_067182029689 awslogin mysql-login --db prod-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
+alias prod_bapi='AWS_PROFILE=ProdReadOnly aws sso login && AWS_PROFILE=ProdReadOnly awslogin mysql-login --db prod-cla-bapi8-replica-us-east-1 --dbuser SamlDbReadAccess | copy_password'
+alias prod_soa='AWS_PROFILE=ProdReadOnly aws sso login  && AWS_PROFILE=ProdReadOnly awslogin mysql-login --db prod-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
 
 #Demo
-alias demo_bapi='assume Built-Root/BuiltSupport_067182029689 && awslogin mysql-login --db demo-cla-bapi8-us-east-1 --dbuser SamlDbReadAccess'
+alias demo_bapi='assume Built-Root/BuiltSupport_067182029689 && awslogin mysql-login --db demo-cla-bapi8-us-east-1 --dbuser SamlDbReadAccess | copy_password'
 alias demo_soa='assume Built-Root/BuiltSupport_067182029689 && awslogin mysql-login --db demo-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
 
 
@@ -180,6 +202,12 @@ dev () {
 prod_aws () {
 	awslogin aws-developer
 	cp ~/.aws/aws-developer ~/.aws/credentials
+}
+
+
+# run php unit tests  
+phpDebugFile(){
+    vendor/bin/phpunit ./tests/$1 -c ./tests/api --no-coverage $2
 }
 
 # AWS RDS MySQL Dumps

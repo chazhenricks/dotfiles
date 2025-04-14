@@ -47,3 +47,18 @@ replace_origin() {
   git reset --hard origin/$1
 }
 
+
+copy_password(){
+
+  output=$(cat)
+
+  password=$(echo "$output" | grep "Password:" | awk -F ' ' '{print $2}')
+
+  if command -v pbcopy &> /dev/null; then
+      echo -n "$password" | pbcopy
+      echo "Password copied to clipboard!"
+  else
+      echo "Clipboard command not found. Install pbcopy."
+      exit 1
+  fi
+}

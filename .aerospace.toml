@@ -40,6 +40,7 @@ alt-6 = 'workspace 6'
 alt-7 = 'workspace 7'
 alt-8 = 'workspace 8'
 alt-9 = 'workspace 9'
+alt-b = 'workspace b'
 
 alt-shift-1 = 'move-node-to-workspace 1'
 alt-shift-2 = 'move-node-to-workspace 2'
@@ -50,6 +51,7 @@ alt-shift-6 = 'move-node-to-workspace 6'
 alt-shift-7 = 'move-node-to-workspace 7'
 alt-shift-8 = 'move-node-to-workspace 8'
 alt-shift-9 = 'move-node-to-workspace 9'
+alt-shift-b = 'move-node-to-workspace b'
 
 alt-shift-r = 'reload-config'
 
@@ -73,14 +75,15 @@ esc = 'mode main'
 
 [workspace-to-monitor-force-assignment]
 1 = [2, 'secondary', 'main'] # terminals
-2 = [1, 'main'] # browsers
+2 = ['LG HDR 4k', 1, 'main'] # browsers
 3 = 'main' # chat
 4 = 'main' # finder
-5 = 'main'
-6 = 'main'
-7 = [2, 'secondary', 'main']
-8 = 'main'
-9 = 'main'
+5 = 'main' # datagrip
+6 = 'main' # video
+7 = [2, 'secondary', 'main'] # multi/zoom screenshare
+8 = 'main' # task manager
+9 = 'main' # spotify
+b = [2, 'secondary', 'main'] # empty workspace for screen sharing 
 
 
 ############################
@@ -112,31 +115,35 @@ run = 'move-node-to-workspace 3'
 if.app-id = 'com.apple.finder'
 run = ['layout floating', 'move-node-to-workspace 4' ]
 
+[[on-window-detected]]
 if.app-id = 'com.apple.Preview'
 run = ['layout floating', 'move-node-to-workspace 4' ]
 
-# Datagrip on 5 
+# Datagrip / postman on 5 
 [[on-window-detected]]
 if.app-id = 'com.jetbrains.datagrip'
 run = 'move-node-to-workspace 5'
 
+
+[[on-window-detected]]
+if.app-id = 'com.postmanlabs.mac'
+run = 'move-node-to-workspace 5'
 
 # Video On 6 
 [[on-window-detected]]
 if.app-id = 'app.multi.multi'
 run = 'move-node-to-workspace 6'
 
+[[on-window-detected]]
+if.app-id = 'us.zoom.xos'
+run = 'move-node-to-workspace 6' 
+
 # Multi/Zoom Screenshare on 7 
 [[on-window-detected]]
 if.app-id = 'app.multi.ScreenshareDockTile'
 run = 'move-node-to-workspace 7'
 
-
-[[on-window-detected]]
-if.app-id = 'us.zoom.xos'
-run = 'move-node-to-workspace 6' 
-
-#TickTick on 8 
+#Task manager on 8 
 [[on-window-detected]]  
 if.app-id = 'com.TickTick.task.mac'
 run = 'move-node-to-workspace 8'

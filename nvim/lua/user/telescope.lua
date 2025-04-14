@@ -3,6 +3,11 @@ if not status_ok then
   return
 end
 
+local grep_status_ok, lga_actions = pcall(require, "telescope-live-grep-args.actions")
+if not grep_status_ok then
+  return
+end
+
 local actions = require "telescope.actions"
 
 telescope.setup {
@@ -42,7 +47,6 @@ telescope.setup {
         ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
         ["<M-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
         ["<C-l>"] = actions.complete_tag,
-        ["<C-_>"] = actions.which_key, -- keys from pressing <C-/>
       },
 
       n = {
@@ -73,10 +77,11 @@ telescope.setup {
 
         ["<PageUp>"] = actions.results_scrolling_up,
         ["<PageDown>"] = actions.results_scrolling_down,
-
-        ["?"] = actions.which_key,
       },
     },
+  },
+  diagnostics = {
+    signs = true,
   },
   pickers = {
     -- Default configuration for builtin pickers goes here:
@@ -87,15 +92,26 @@ telescope.setup {
     -- Now the picker_config_key will be applied every time you call this
     -- builtin picker
     find_files = {
-      hidden = true
+      hidden = true,
     },
-
   },
   extensions = {
-    -- Your extension configuration goes here:
-    -- extension_name = {
-    --   extension_config_key = value,
-    -- }
-    -- please take a look at the readme of the extension you want to configure
+    live_grep_args = {
+      auto_quoting = true, -- enable/disable auto-quoting
+      -- define mappings, e.g.
+      mappings = { -- extend mappings
+        i = {
+          ["<C-q>"] = lga_actions.quote_prompt(),
+          ["<C-i>"] = lga_actions.quote_prompt { postfix = " --iglob " },
+          -- freeze the current list and start a fuzzy search in the frozen list
+          ["<C-space>"] = actions.to_fuzzy_refine,
+        },
+      },
+      -- ... also accepts theme settings, for example:
+      -- theme = "dropdown", -- use dropdown theme
+      -- theme = { }, -- use own theme spec
+      -- layout_config = { mirror=true }, -- mirror preview pane
+    },
   },
 }
+telescope.load_extension "live_grep_args"

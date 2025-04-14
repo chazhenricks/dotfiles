@@ -43,6 +43,8 @@ vim.opt.linebreak = true
 vim.opt.relativenumber = true
 vim.opt.winbar = "%{%v:lua.require('user.winbar').eval()%}"
 vim.opt.autoread = true
+vim.opt.inccommand = "nosplit"
+
 -- disable netRW
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1

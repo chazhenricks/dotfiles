@@ -57,11 +57,12 @@ return packer.startup(function(use)
   use { "lukas-reineke/indent-blankline.nvim" }
   use { "goolord/alpha-nvim" }
   use { "tpope/vim-abolish" }
+  use { "vim-test/vim-test", opt = false }
 
   -- Colorschemes
   use { "lunarvim/darkplus.nvim", commit = "13ef9daad28d3cf6c5e793acfc16ddbf456e1c83" }
   use "lunarvim/colorschemes" -- A bunch of colorschemes you can try out
-  use { "AlexvZyl/nordic.nvim", commit = "5e2813e7d17" }
+  use { "AlexvZyl/nordic.nvim" }
   -- cmp plugins
   use { "hrsh7th/nvim-cmp" } -- The completion plugin
   use { "hrsh7th/cmp-buffer" } -- buffer completions
@@ -80,9 +81,11 @@ return packer.startup(function(use)
   use { "williamboman/mason-lspconfig.nvim" }
   use { "jose-elias-alvarez/null-ls.nvim" } -- for formatters and linters
   use { "RRethy/vim-illuminate" }
+  use { "lbrayner/vim-rzip" }
 
   -- Telescope
   use { "nvim-telescope/telescope.nvim" }
+  use { "nvim-telescope/telescope-live-grep-args.nvim" }
 
   -- Treesitter
   use {
@@ -96,9 +99,6 @@ return packer.startup(function(use)
   -- Copilot
   use { "github/copilot.vim" }
 
-  -- which-key
-  use { "folke/which-key.nvim" }
-
   -- Harppoon (WIP)
   use { "ThePrimeagen/harpoon" }
 
@@ -110,17 +110,25 @@ return packer.startup(function(use)
     "mfussenegger/nvim-dap",
     requires = {
       "rcarriga/nvim-dap-ui",
+      "nvim-neotest/nvim-nio",
+      "theHamsta/nvim-dap-virtual-text",
       "mxsdev/nvim-dap-vscode-js",
-      "David-Kunz/jester",
     },
   }
-
-  -- Debuggers
+  use { "jay-babu/mason-nvim-dap.nvim" }
   use {
     "microsoft/vscode-js-debug",
     opt = true,
     run = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
   }
+  use { "nvim-telescope/telescope-dap.nvim" }
+  use { "Joakker/lua-json5", build = "./install.sh" }
+
+  -- Database
+  use { "tpope/vim-dadbod" }
+  use { "kristijanhusak/vim-dadbod-ui" }
+  use { "kristijanhusak/vim-dadbod-completion" }
+
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
   if PACKER_BOOTSTRAP then

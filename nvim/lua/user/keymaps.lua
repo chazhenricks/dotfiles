@@ -20,7 +20,6 @@ keymap("n", "<C-h>", "<C-w>h", opts)
 keymap("n", "<C-j>", "<C-w>j", opts)
 keymap("n", "<C-k>", "<C-w>k", opts)
 keymap("n", "<C-l>", "<C-w>l", opts)
-
 -- split panes
 keymap("n", "<leader>-", "<C-w>s", opts)
 keymap("n", "<leader>\\", "<C-w>v", opts)
@@ -106,10 +105,16 @@ keymap("n", "<leader>ww", "<cmd>wa<CR>", opts)
 keymap("n", "<leader>e", ":NvimTreeToggle<CR>", opts)
 
 -- Telescope
+-- diagnostics, find_files, etc... refer to telescope builtin functions
+-- the telescope.lua file has the configuration for all the telescope functions
+keymap("n", "<leader>fe", ":Telescope diagnostics<CR>", opts)
 keymap("n", "<leader>ff", ":Telescope find_files<CR>", opts)
-keymap("n", "<leader>ft", ":Telescope live_grep<CR>", opts)
+keymap("n", "<leader>fg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>", opts)
 keymap("n", "<leader>fp", ":Telescope projects<CR>", opts)
 keymap("n", "<leader>fb", ":Telescope buffers<CR>", opts)
+keymap("n", "<leader>ft", ":Telescope lsp_workspace_symbols<CR>", opts)
+local live_grep_args_shortcuts = require "telescope-live-grep-args.shortcuts"
+keymap("n", "<leader>fc", live_grep_args_shortcuts.grep_word_under_cursor, opts)
 
 -- Git
 keymap("n", "<leader>gg", "<cmd>G<CR>", opts)
@@ -134,6 +139,11 @@ keymap("n", "<leader>j2", "<cmd>lua require('harpoon.ui').nav_file(2)<CR>")
 keymap("n", "<leader>j3", "<cmd>lua require('harpoon.ui').nav_file(3)<CR>")
 keymap("n", "<leader>j4", "<cmd>lua require('harpoon.term').gotoTerminal(1)<CR>")
 
+--tests
+keymap("n", "<leader>t", "<cmd>TestNearest<CR>", opts)
+keymap("n", "<leader>T", "<cmd>TestFile<CR>", opts)
+keymap("n", "<leader>lt", "<cmd>TestLast<CR>", opts)
+
 -- Copilot
 vim.g.copilot_no_tab_map = true
 keymap("n", "<leader>ce", ":Copilot enable <CR>")
@@ -156,16 +166,16 @@ keymap("i", ";;", "<esc>A;<esc>o", opts)
 
 -- exist and insert new line above current
 keymap("i", "<C-o>", "<esc>O", opts)
-keymap("i", "<C-]>", "{<CR>}<esc>O", opts)
+keymap("i", "<leader>]]", "{<CR>}<esc>O", opts)
 
--- DAP
-keymap("n", "<leader>da", "<cmd>lua require'dap'.attach()<cr>", opts)
-keymap("n", "<leader>db", "<cmd>lua require'dap'.toggle_breakpoint()<cr>", opts)
-keymap("n", "<leader>dc", "<cmd>lua require'dap'.continue()<cr>", opts)
-keymap("n", "<leader>di", "<cmd>lua require'dap'.step_into()<cr>", opts)
-keymap("n", "<leader>do", "<cmd>lua require'dap'.step_over()<cr>", opts)
-keymap("n", "<leader>dO", "<cmd>lua require'dap'.step_out()<cr>", opts)
-keymap("n", "<leader>dr", "<cmd>lua require'dap'.repl.toggle()<cr>", opts)
-keymap("n", "<leader>dl", "<cmd>lua require'dap'.run_last()<cr>", opts)
-keymap("n", "<leader>du", "<cmd>lua require'dapui'.toggle()<cr>", opts)
-keymap("n", "<leader>dt", "<cmd>lua require'dap'.terminate()<cr>", opts)
+--Dadbod
+keymap("n", "<leader>du", ":DBUIToggle<CR>", opts)
+keymap("n", "<leader>df", ":DBUIFindBuffer<CR>", opts)
+keymap("n", "<leader>dr", ":DBUIRenameBuffer<CR>", opts)
+keymap("n", "<leader>dl", ":DBUILastQueryInfo<CR>", opts)
+
+-- LSP open definition in new split
+keymap("n", "gw", function()
+  vim.cmd "vsplit"
+  vim.lsp.buf.definition()
+end, opts)

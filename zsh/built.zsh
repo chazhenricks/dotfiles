@@ -163,8 +163,8 @@ alias dev_bapi='AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db d
 alias dev_soa='AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db dev-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
 
 # OPS
-alias ops_bapi='AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db ops-cla-bapi8-us-east-1 --dbuser SamlDbReadAccess'
-alias ops_soa='AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db ops-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
+alias ops_bapi='granted sso login --sso-start-url https://d-9067662d10.awsapps.com/start/# --sso-region us-east-1 && AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db ops-cla-bapi8-us-east-1 --dbuser SamlDbReadAccess | copy_password'
+alias ops_soa='granted sso login --sso-start-url https://d-9067662d10.awsapps.com/start/# --sso-region us-east-1 && AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db ops-cla-soa8-us-east-1 --dbuser SamlDbReadAccess | copy_password'
 
 # STAGING 
 alias staging_assume='assume AWS_PROFILE=Built-Dev/BuiltDeveloper'
@@ -173,11 +173,16 @@ alias staging_soa='staging_assume && AWS_PROFILE=Built-Dev/BuiltDeveloper awslog
 
 #PROD
 alias prod_bapi='AWS_PROFILE=ProdReadOnly aws sso login && AWS_PROFILE=ProdReadOnly awslogin mysql-login --db prod-cla-bapi8-replica-us-east-1 --dbuser SamlDbReadAccess | copy_password'
-alias prod_soa='AWS_PROFILE=ProdReadOnly aws sso login  && AWS_PROFILE=ProdReadOnly awslogin mysql-login --db prod-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
+alias prod_soa='AWS_PROFILE=ProdReadOnly aws sso login  && AWS_PROFILE=ProdReadOnly awslogin mysql-login --db prod-cla-soa8-us-east-1 --dbuser SamlDbReadAccess | copy_password'
+alias prod_soa_write='AWS_PROFILE=ProdReadWrite aws sso login  && AWS_PROFILE=ProdReadWrite awslogin mysql-login --db prod-cla-soa8-us-east-1 --dbuser SamlDbReadWriteAccess | copy_password'
 
 #Demo
 alias demo_bapi='assume Built-Root/BuiltSupport_067182029689 && awslogin mysql-login --db demo-cla-bapi8-us-east-1 --dbuser SamlDbReadAccess | copy_password'
 alias demo_soa='assume Built-Root/BuiltSupport_067182029689 && awslogin mysql-login --db demo-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
+
+# PMU
+alias pmu_bapi='AWS_PROFILE=built_uat/BuiltDeveloperReadOnly awslogin mysql-login --db pmu-cla-bapi8-us-east-2 --dbuser SamlDbReadAccess | copy_password'
+alias pmu_soa='AWS_PROFILE=built_uat/BuiltDeveloperReadOnly awslogin mysql-login --db pmu-cla-soa8-us-east-2 --dbuser SamlDbReadAccess | copy_password'
 
 
 

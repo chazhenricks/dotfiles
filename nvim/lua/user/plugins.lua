@@ -16,10 +16,11 @@ if fn.empty(fn.glob(install_path)) > 0 then
 end
 
 -- Autocommand that reloads neovim whenever you save the plugins.lua file
+-- test
 vim.cmd [[
   augroup packer_user_config
     autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerSync
+    autocmd BufWritePost plugins.lua source <afile>
   augroup end
 ]]
 
@@ -56,13 +57,20 @@ return packer.startup(function(use)
   use { "ahmedkhalf/project.nvim" }
   use { "lukas-reineke/indent-blankline.nvim" }
   use { "goolord/alpha-nvim" }
-  use { "tpope/vim-abolish" }
   use { "vim-test/vim-test", opt = false }
+  use { "mattn/emmet-vim" }
+
+  --rails
+  use { "tpope/vim-rails" }
+  use { "tpope/vim-bundler" }
+  use { "tpope/vim-abolish" }
 
   -- Colorschemes
   use { "lunarvim/darkplus.nvim", commit = "13ef9daad28d3cf6c5e793acfc16ddbf456e1c83" }
   use "lunarvim/colorschemes" -- A bunch of colorschemes you can try out
   use { "AlexvZyl/nordic.nvim" }
+  use { "rebelot/kanagawa.nvim" }
+  use { "sainnhe/everforest" }
   -- cmp plugins
   use { "hrsh7th/nvim-cmp" } -- The completion plugin
   use { "hrsh7th/cmp-buffer" } -- buffer completions
@@ -77,8 +85,8 @@ return packer.startup(function(use)
 
   -- LSP
   use { "neovim/nvim-lspconfig" } -- enable LSP
-  use { "williamboman/mason.nvim" }
-  use { "williamboman/mason-lspconfig.nvim" }
+  use { "mason-org/mason.nvim", commit = "fc98833" }
+  use { "mason-org/mason-lspconfig.nvim", commit = "1a31f824b9cd5bc6f342fc29e9a53b60d74af245" }
   use { "jose-elias-alvarez/null-ls.nvim" } -- for formatters and linters
   use { "RRethy/vim-illuminate" }
   use { "lbrayner/vim-rzip" }
@@ -86,6 +94,7 @@ return packer.startup(function(use)
   -- Telescope
   use { "nvim-telescope/telescope.nvim" }
   use { "nvim-telescope/telescope-live-grep-args.nvim" }
+  use { "stevearc/oil.nvim" }
 
   -- Treesitter
   use {
@@ -95,6 +104,7 @@ return packer.startup(function(use)
   -- Git
   use { "lewis6991/gitsigns.nvim" }
   use { "tpope/vim-fugitive" }
+  use { "tpope/vim-rhubarb" }
 
   -- Copilot
   use { "github/copilot.vim" }

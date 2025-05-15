@@ -54,9 +54,6 @@ keymap("n", "<S-q>", "<cmd>Bdelete!<CR>", opts)
 -- Better paste
 keymap("v", "p", '"_dP', opts)
 
--- Open Config
-keymap("n", "<leader>c", ":e $MYVIMRC <CR>", opts)
-
 -- Copy/Paste from system clipboard
 keymap("v", "<leader>y", '"+y', opts) -- copy to clipboard
 keymap("v", "<leader>Y", '"+yg_', opts) -- copy till end of line to clipboard
@@ -92,9 +89,6 @@ keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
 -- make current bash file executable within vim
 keymap("n", "<leader>x", "<cmd>!chmod +x %<CR>", opts)
 
--- alias for quit
-keymap("n", "<leader>q", "<cmd>q<CR>", opts)
-
 -- alias' for write all and quit all
 keymap("n", "<leader>qq", "<cmd>qa<CR>", opts)
 keymap("n", "<leader>ww", "<cmd>wa<CR>", opts)
@@ -103,6 +97,7 @@ keymap("n", "<leader>ww", "<cmd>wa<CR>", opts)
 
 -- NvimTree
 keymap("n", "<leader>e", ":NvimTreeToggle<CR>", opts)
+keymap("n", "-", "<CMD>Oil<CR>", opts)
 
 -- Telescope
 -- diagnostics, find_files, etc... refer to telescope builtin functions
@@ -123,6 +118,8 @@ keymap("n", "<leader>gs", "<cmd>Git status<CR>", opts)
 keymap("n", "<leader>gco", ":Git checkout<space>", opts)
 keymap("n", "<leader>gcb", ":Git checkout<space>", opts)
 keymap("n", "<leader>gp", ":Git push", opts)
+keymap("n", "<leader>gh", "<CMD>GBrowse<CR>", opts)
+keymap("x", "<leader>gh", ":GBrowse<CR>", opts)
 
 -- Comment
 keymap("n", "<leader>/", "<cmd>lua require('Comment.api').toggle.linewise.current()<CR>", opts)
@@ -173,6 +170,10 @@ keymap("n", "<leader>du", ":DBUIToggle<CR>", opts)
 keymap("n", "<leader>df", ":DBUIFindBuffer<CR>", opts)
 keymap("n", "<leader>dr", ":DBUIRenameBuffer<CR>", opts)
 keymap("n", "<leader>dl", ":DBUILastQueryInfo<CR>", opts)
+
+-- Rails
+keymap("n", "<leader>rr", "<CMD>R<CR>", opts) -- related file
+keymap("n", "<leader>aa", "<CMD>A<CR>", opts) -- alternte file file
 
 -- LSP open definition in new split
 keymap("n", "gw", function()

@@ -2,6 +2,20 @@
 # ##########
 # Functions 
 # ##########
+pull_notes(){
+  cd ~/Documents/obsidian-notes
+  git checkout main
+  git pull origin main
+  cd -
+}
+push_notes(){
+  cd ~/Documents/obsidian-notes
+  git add . 
+  git commit -m "sync notes" 
+  git push origin main
+  cd -
+}
+
 
 sz () {
   source ~/.zshrc

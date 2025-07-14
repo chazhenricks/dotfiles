@@ -1,27 +1,30 @@
-require "user.options"
-require "user.keymaps"
-require "user.plugins"
-require "user.autocommands"
-require "user.colorscheme"
-require "user.cmp"
-require "user.oil"
-require "user.telescope"
-require "user.gitsigns"
-require "user.treesitter"
-require "user.autopairs"
-require "user.comment"
+-- -------------------------------------------------------
+-- Init lazyvim, setup path, and download if not installed
+-- -------------------------------------------------------
+local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system {
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  }
+end
+vim.opt.rtp:prepend(lazypath)
 
--- require "user.nvim-tree-setup"
--- require "user.bufferline"
-require "user.lualine"
-require "user.toggleterm"
-require "user.project"
-require "user.illuminate"
-require "user.indentline"
-require "user.alpha"
-require "user.lsp"
-require "user.dap"
-require "user.harpoon"
-require "user.vimtest"
-require "user.dadbod"
-require "user.rails"
+-- -------------------------------------------------------
+--global options and keymaps
+-- -------------------------------------------------------
+require "vim-options"
+
+-- -------------------------------------------------------
+-- plugins and their configs/keymaps
+-- -------------------------------------------------------
+require("lazy").setup {
+  spec = {
+    { import = "plugins" }, --look in lua/plugins for configs
+  },
+  change_detection = { enabled = false }, -- dont tell me each time the config changes
+}

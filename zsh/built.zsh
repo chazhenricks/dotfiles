@@ -8,8 +8,8 @@
 ##############
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-export K8S_TEAM_NAME="full-app"
-export K8S_SHARED_STACK="full-app"
+export K8S_TEAM_NAME="built-chain"
+export K8S_SHARED_STACK="built-chain"
 export K8S_NAMESPACE_OVERRIDE="chahen"
 export NS=$(whoami | awk -F. '{print substr($1, 1, 3) substr($2, 1, 3)}')
 export NAMESPACE="chahen"

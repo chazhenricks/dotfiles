@@ -123,9 +123,6 @@ keymap("n", "<leader>gco", ":Git checkout<space>", opts)
 keymap("n", "<leader>gcb", ":Git checkout<space>", opts)
 keymap("n", "<leader>gp", ":Git push", opts)
 
--- Comment
-keymap("n", "<leader>/", "<cmd>lua require('Comment.api').toggle.linewise.current()<CR>", opts)
-keymap("x", "<leader>/", "<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>", opts)
 
 -- Lsp
 keymap("n", "<leader>lf", "<cmd>lua vim.lsp.buf.format{ async = true }<cr>", opts)

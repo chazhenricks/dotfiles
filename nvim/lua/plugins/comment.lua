@@ -1,4 +1,5 @@
 return {
+  {
   'numToStr/Comment.nvim',
   config = function()
     local comment = require('Comment')
@@ -26,5 +27,17 @@ return {
         end
       end,
     }
+
+
+-- keymaps 
+vim.keymap.set("n", "<leader>/", "<CMD>lua require('Comment.api').toggle.linewise.current()<CR>", {})
+
+vim.keymap.set(
+"x", 
+"<leader>/", 
+"<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>", 
+{}
+)
   end
+}
 }

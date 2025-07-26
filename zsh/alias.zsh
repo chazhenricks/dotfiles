@@ -11,3 +11,10 @@ alias path="echo $PATH | tr ':' '\n'"
 alias notes="cd $HOME/Documents/chaz/built-notes && nvim . "
 alias dot="nvim $HOME/dotfiles" 
 
+
+alias hs="http-server"
+
+
+# use italics in tmux 
+alias tmux="env TERM=screen-256color tmux"
+

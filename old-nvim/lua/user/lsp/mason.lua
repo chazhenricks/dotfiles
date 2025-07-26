@@ -11,6 +11,7 @@ local servers = {
   "clangd",
   "gopls",
   "terraformls",
+  "solargraph"
 }
 
 local settings = {

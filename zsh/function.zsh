@@ -3,6 +3,20 @@
 # Functions 
 # ##########
 
+pull_notes(){
+  cd ~/Documents/obsidian-notes
+  git checkout main 
+  git pull
+  cd -
+}
+push_notes(){
+  cd ~/Documents/obsidian-notes
+  git checkout main 
+  git add .
+  git commit -m "sync notes"
+  git push origin main 
+  cd -
+}
 sz () {
   source ~/.zshrc
   config add ~/.zshrc 
@@ -50,6 +64,7 @@ k8s_up(){
     cd -
 }
 
+<<<<<<< Updated upstream
 # destroy a pod 
 k8s_destroy() {
 helmfile destroy -l name=$1
@@ -147,3 +162,11 @@ load_extract() {
 
 
 
+=======
+
+new_journal(){
+  cd journal 
+  nvim "$EPOCHSECONDS".md
+}
+
+>>>>>>> Stashed changes

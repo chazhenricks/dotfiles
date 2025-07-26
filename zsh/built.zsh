@@ -15,6 +15,7 @@ export NS=$(whoami | awk -F. '{print substr($1, 1, 3) substr($2, 1, 3)}')
 export NAMESPACE="chahen"
 export K8S_NAMESPACE="chahen"
 export GRANTED_NO_KEYRING=true
+export K9S_SKIN="everforest-dark"
 
 
 # start kubernetes dev environment 
@@ -172,8 +173,8 @@ alias staging_bapi='staging_assume && AWS_PROFILE=Built-Dev/BuiltDeveloper awslo
 alias staging_soa='staging_assume && AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db staging-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
 
 #PROD
-alias prod_bapi='AWS_PROFILE=ProdReadOnly aws sso login && AWS_PROFILE=ProdReadOnly awslogin mysql-login --db prod-cla-bapi8-replica-us-east-1 --dbuser SamlDbReadAccess | copy_password'
-alias prod_soa='AWS_PROFILE=ProdReadOnly aws sso login  && AWS_PROFILE=ProdReadOnly awslogin mysql-login --db prod-cla-soa8-us-east-1 --dbuser SamlDbReadAccess | copy_password'
+alias prod_bapi='AWS_PROFILE=Built-Root/ProdReadOnly aws sso login && AWS_PROFILE=Built-Root/ProdReadOnly awslogin mysql-login --db prod-cla-bapi8-replica-us-east-1 --dbuser SamlDbReadAccess | copy_password'
+alias prod_soa='AWS_PROFILE=Built-Root/ProdReadOnly aws sso login  && AWS_PROFILE=Built-Root/ProdReadOnly awslogin mysql-login --db prod-cla-soa8-us-east-1 --dbuser SamlDbReadAccess | copy_password'
 alias prod_soa_write='AWS_PROFILE=ProdReadWrite aws sso login  && AWS_PROFILE=ProdReadWrite awslogin mysql-login --db prod-cla-soa8-us-east-1 --dbuser SamlDbReadWriteAccess | copy_password'
 
 #Demo

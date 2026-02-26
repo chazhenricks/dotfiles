@@ -74,8 +74,7 @@ return {
         "$FILENAME",
       }
 
-      -- Args must be set on eslint_d (the linter actually used), not eslint
-      lint.linters.eslint_d.args = {
+      lint.linters.eslint.args = {
         "--format",
         "json",
         "--stdin",
@@ -83,31 +82,10 @@ return {
         "$FILENAME",
       }
 
-      -- Find monorepo/project root so eslint_d's cwd has access to root node_modules
-      -- (fixes "Cannot find package ... @my-etsy/eslint-config" when buffer is in a subdir)
-      local function find_lint_root()
-        local path = vim.api.nvim_buf_get_name(0)
-        if path == "" then return nil end
-        local dir = vim.fn.fnamemodify(path, ":p:h")
-        while dir ~= nil and dir ~= "" and dir ~= "/" do
-          if vim.fn.isdirectory(dir .. "/node_modules/@my-etsy/eslint-config") == 1 then
-            return dir
-          end
-          if vim.fn.filereadable(dir .. "/pnpm-workspace.yaml") == 1 then
-            return dir
-          end
-          local parent = vim.fn.fnamemodify(dir, ":h")
-          if parent == dir then break end
-          dir = parent
-        end
-        return nil
-      end
-
-      -- Set up lint on save; run eslint_d from project root so shared config resolves
+      -- Set up lint on save
       vim.api.nvim_create_autocmd({ "BufWritePost" }, {
         callback = function()
-          local root = find_lint_root()
-          require("lint").try_lint(nil, root and { cwd = root } or {})
+          require("lint").try_lint()
         end,
       })
     end,

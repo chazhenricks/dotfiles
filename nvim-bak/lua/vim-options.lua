@@ -55,19 +55,6 @@ vim.g.loaded_netrwPlugin = 1
 
 vim.loader.enable()
 
-----------------------------------
---- make python spaces not shitty
-----------------------------------
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "python",
-  callback = function()
-    vim.opt_local.shiftwidth = 4
-    vim.opt_local.tabstop = 4
-    vim.opt_local.softtabstop = 4
-    vim.opt_local.expandtab = true
-  end,
-})
-
 -------------------------------------------
 -- General Vim Keymaps (not plugin related)
 -------------------------------------------

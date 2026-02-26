@@ -16,10 +16,10 @@ export PATH=$PATH:$HOME/.local/bin
 export EDITOR=nvim
 
 # set the term if in tmux
-export TERM=xterm-256color
-if [[ -n "$TMUX" ]]; then
-  export TERM=tmux-256color
-fi
+# export TERM=xterm-256color
+# if [[ -n "$TMUX" ]]; then
+#   export TERM=tmux-256color
+# fi
 
 # set the Mason directory in the path so we can use LSPs in the terminal if need be 
 export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
@@ -31,6 +31,20 @@ export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
 # oh-my-zsh #
 ##############
 export ZSH="$HOME/.oh-my-zsh"
+
+# General ZSH Settings
+HYPHEN_INSENSITIVE="true"
+ZSH_THEME="miloshadzic"
+# Startup oh-my-zsh
+source $ZSH/oh-my-zsh.sh
+
+# gwip without skip-ci
+unalias gwip 2>/dev/null
+gwip() {
+  git add -A
+  git rm $(git ls-files --deleted) 2>/dev/null
+  git commit --no-verify --no-gpg-sign -m "--wip--"
+}
 
  # lolz 
  export HOMER="doh"
@@ -48,6 +62,20 @@ export LDFLAGS="-L$(brew --prefix zlib)/lib -L$(brew --prefix bzip2)/lib -L/opt/
 export CPPFLAGS="-I$(brew --prefix zlib)/include -I$(brew --prefix bzip2)/include -I/opt/homebrew/opt/llvm/include"
 export PKG_CONFIG_PATH="$(brew --prefix libffi)/lib/pkgconfig:/opt/homebrew/opt/llvm/lib/pkgconfig:$PKG_CONFIG_PATH "
 
+#########
+# for UV 
+# #######
+precmd() {
+  if [[ -n "$VIRTUAL_ENV" ]]; then
+    case ":$PATH:" in
+      *":$VIRTUAL_ENV/bin:"*) ;;                       # already there
+      *) export PATH="$VIRTUAL_ENV/bin:$PATH" ;;       # prepend it
+    esac
+  fi
+}
+
+
+
 
 
 ############
@@ -56,6 +84,13 @@ export PKG_CONFIG_PATH="$(brew --prefix libffi)/lib/pkgconfig:/opt/homebrew/opt/
 export GOPATH="$HOME/go"
 export PATH="$PATH:$GOPATH/bin"
 
+
+############
+# Java Shit 
+############
+export JAVA_HOME="/opt/homebrew/opt/openjdk@11/libexec/openjdk.jdk/Contents/Home"
+export PATH="$JAVA_HOME/bin:$PATH"
+
 ###########
 # CD Path #
 ###########
@@ -63,20 +98,7 @@ setopt auto_cd
 cdpath=($HOME/BuiltSource $HOME/Documents/chaz $HOME/Documents $HOME)
 
 
-# General ZSH Settings
-HYPHEN_INSENSITIVE="true"
 
-
-
-# Setup Spaceship
-# idk why but this is big mad on my work computer - opting to use the oh-my-zsh theme instead.
-ZSH_THEME="miloshadzic"
-
-
-# Startup oh-my-zsh
-source $ZSH/oh-my-zsh.sh
-
-# source "/opt/homebrew/opt/spaceship/spaceship.zsh"
 # ##########
 # THE FUCK!?
 # ##########
@@ -103,6 +125,3 @@ export PATH="/opt/homebrew/opt/mysql@5.7/bin:$PATH"
 export GLAMOUR_STYLE='../glow-style.json'
 
 
-# #########
-# pomodoro 
-# #########

@@ -16,6 +16,8 @@ export NAMESPACE="chahen"
 export K8S_NAMESPACE="chahen"
 export GRANTED_NO_KEYRING=true
 export K9S_SKIN="everforest-dark"
+export CONFIG_PATH="environments/staging.env" 
+export ELASTICSEARCH_URL="chahen.workstation.getbuilt.com/elasticsearch"
 
 
 # start kubernetes dev environment 
@@ -23,6 +25,19 @@ k8s_yesterday(){
     assume
     AWS_PROFILE=built_dev_eks/BuiltAdmin aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 833816692833.dkr.ecr.us-east-1.amazonaws.com
     make start_day
+}
+
+runtf(){
+    make tf-run chart=marketplace-product-api 
+    make tf-run chart=auth-service
+}
+
+reindex(){
+    cd ~/BuiltSource/marketplace-product-api 
+    make reindex_orders
+    cd ~/BuiltSource/auth-service
+    make k8s.search_v2.reindex.auth_users
+    cd ~/BuiltSource/kubernetes-developer-environment/single-stack
 }
 
 k8s_new(){
@@ -39,13 +54,19 @@ k8s_new(){
   }
 
 
-k8s_fe(){
+
+# run nvm use then npm i to make sure im on the right node version and have packages synced
+nui() {
+  nvm use && npm i 
+}
+
+fe_sync(){
   if [ -n "$1" ]; then 
-    echo "running: make frontend-upload profile=built_dev_eks/BuiltAdmin repo=$1 static_files_path=/Users/chaz.henricks/BuiltSource/$1/dist"
-    make frontend-upload profile=built_dev_eks/BuiltAdmin repo=$1 static_files_path=/Users/chaz.henricks/BuiltSource/$1/dist
+    echo "running: make frontend-upload profile=built_dev_eks/BuiltAdmin namespace=chahen repo=$1 static_files_path=/Users/chaz.henricks/BuiltSource/$1/dist"
+    make frontend-upload profile=built_dev_eks/BuiltAdmin namespace=chahen repo=$1 static_files_path=/Users/chaz.henricks/BuiltSource/$1/dist
   else 
-    echo "running: make frontend-sync profile=built_dev_eks/BuiltAdmin"
-    make frontend-sync profile=built_dev_eks/BuiltAdmin 
+    echo "running: make frontend-sync profile=built_dev_eks/BuiltAdmin namespace=chahen"
+    make frontend-sync profile=built_dev_eks/BuiltAdmin namespace=chahen
   fi
 }
 
@@ -152,9 +173,32 @@ load_extract() {
     mysql -u root -h 127.0.0.1 --port 13306 -p local_built_api < ./$1.sql
 }
 
+function docker_build_k8s() {
+    local dir_name=$(basename "$PWD")
+    AWS_PROFILE=Built-Dev/BuiltDeveloper aws sso login
+    AWS_PROFILE=Built-Dev/BuiltDeveloper aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 833816692833.dkr.ecr.us-east-1.amazonaws.com
+    DOCKER_BUILDKIT=1 docker build . --platform=linux/amd64 --target k8s-dev --tag 325405374407.dkr.ecr.us-east-2.amazonaws.com/$dir_name:k8s-dev-latest
+}
+function docker_push_k8s() {
+    local dir_name=$(basename "$PWD")
+    AWS_PROFILE=Built-Dev/BuiltDeveloper aws sso login
+    AWS_PROFILE=built_dev_eks/BuiltEksDev aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 325405374407.dkr.ecr.us-east-2.amazonaws.com
+    AWS_PROFILE=built_dev_eks/BuiltEksDev docker push 325405374407.dkr.ecr.us-east-2.amazonaws.com/$dir_name:k8s-dev-latest
+}
 
 
-
+function docker_build_test() {
+    local dir_name=$(basename "$PWD")
+    AWS_PROFILE=Built-Dev/BuiltDeveloper aws sso login
+    AWS_PROFILE=Built-Dev/BuiltDeveloper aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 833816692833.dkr.ecr.us-east-1.amazonaws.com
+    DOCKER_BUILDKIT=1 docker build . --platform=linux/amd64  --tag 325405374407.dkr.ecr.us-east-2.amazonaws.com/$dir_name:$1
+}
+function docker_push_test() {
+    local dir_name=$(basename "$PWD")
+    AWS_PROFILE=Built-Dev/BuiltDeveloper aws sso login
+    AWS_PROFILE=built_dev_eks/BuiltEksDev aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 325405374407.dkr.ecr.us-east-2.amazonaws.com
+    AWS_PROFILE=built_dev_eks/BuiltEksDev docker push 325405374407.dkr.ecr.us-east-2.amazonaws.com/$dir_name:$1
+}
 
 # New Awslogin format 
 # THIS REFRESH COMMAND DOESNT WORK VERY WELL. 
@@ -164,8 +208,8 @@ alias dev_bapi='AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db d
 alias dev_soa='AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db dev-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
 
 # OPS
-alias ops_bapi='granted sso login --sso-start-url https://d-9067662d10.awsapps.com/start/# --sso-region us-east-1 && AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db ops-cla-bapi8-us-east-1 --dbuser SamlDbReadAccess | copy_password'
-alias ops_soa='granted sso login --sso-start-url https://d-9067662d10.awsapps.com/start/# --sso-region us-east-1 && AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db ops-cla-soa8-us-east-1 --dbuser SamlDbReadAccess | copy_password'
+alias ops_bapi='AWS_PROFILE=Built-Dev/BuiltDeveloper aws sso login &&  AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db ops-cla-bapi8-us-east-1 --dbuser SamlDbReadAccess | copy_password'
+alias ops_soa='AWS_PROFILE=Built-Dev/BuiltDeveloper aws sso login && AWS_PROFILE=Built-Dev/BuiltDeveloper awslogin mysql-login --db ops-cla-soa8-us-east-1 --dbuser SamlDbReadAccess | copy_password'
 
 # STAGING 
 alias staging_assume='assume AWS_PROFILE=Built-Dev/BuiltDeveloper'
@@ -176,14 +220,17 @@ alias staging_soa='staging_assume && AWS_PROFILE=Built-Dev/BuiltDeveloper awslog
 alias prod_bapi='AWS_PROFILE=Built-Root/ProdReadOnly aws sso login && AWS_PROFILE=Built-Root/ProdReadOnly awslogin mysql-login --db prod-cla-bapi8-replica-us-east-1 --dbuser SamlDbReadAccess | copy_password'
 alias prod_soa='AWS_PROFILE=Built-Root/ProdReadOnly aws sso login  && AWS_PROFILE=Built-Root/ProdReadOnly awslogin mysql-login --db prod-cla-soa8-us-east-1 --dbuser SamlDbReadAccess | copy_password'
 alias prod_soa_write='AWS_PROFILE=ProdReadWrite aws sso login  && AWS_PROFILE=ProdReadWrite awslogin mysql-login --db prod-cla-soa8-us-east-1 --dbuser SamlDbReadWriteAccess | copy_password'
+alias prod_auth='AWS_PROFILE=Built-Root/ProdReadOnly aws sso login && AWS_PROFILE=Built-Root/ProdReadOnly awslogin mysql-login --db prod-platform-core-us-east-1 --dbuser SamlDbReadAccess '
 
 #Demo
 alias demo_bapi='assume Built-Root/BuiltSupport_067182029689 && awslogin mysql-login --db demo-cla-bapi8-us-east-1 --dbuser SamlDbReadAccess | copy_password'
 alias demo_soa='assume Built-Root/BuiltSupport_067182029689 && awslogin mysql-login --db demo-cla-soa8-us-east-1 --dbuser SamlDbReadAccess'
 
 # PMU
-alias pmu_bapi='AWS_PROFILE=built_uat/BuiltDeveloperReadOnly awslogin mysql-login --db pmu-cla-bapi8-us-east-2 --dbuser SamlDbReadAccess | copy_password'
-alias pmu_soa='AWS_PROFILE=built_uat/BuiltDeveloperReadOnly awslogin mysql-login --db pmu-cla-soa8-us-east-2 --dbuser SamlDbReadAccess | copy_password'
+alias pmu_bapi='AWS_PROFILE=built_uat/ProdReadOnly aws sso login  && AWS_PROFILE=built_uat/ProdReadOnly awslogin mysql-login --db pmu-cla-bapi8-us-east-2 --dbuser SamlDbReadAccess | copy_password'
+alias pmu_soa='AWS_PROFILE=built_uat/ProdReadOnly aws sso login && AWS_PROFILE=built_uat/ProdReadOnly awslogin mysql-login --db pmu-cla-soa8-us-east-2 --dbuser SamlDbReadAccess | copy_password'
+alias pmu_auth='AWS_PROFILE=built_uat/ProdReadOnly aws sso login && AWS_PROFILE=built_uat/ProdReadOnly awslogin mysql-login --db pmu-platform-core-us-east-2 --dbuser SamlDbReadAccess | copy_password'
+
 
 
 
@@ -234,28 +281,6 @@ function dump_ops () {
 }
 
 
-####################
-# Cloud 9 Specific #
-####################
-
-#############
-# c9 alises #
-#############
-
-alias vars="built_c9_vars"
-alias ra="built_service_reset apache"
-alias bcpi="built_up --clean -p inspections"
-alias db='mysql --host=127.0.0.1 --port=13306 --user=root --password=Trousdale1!'
-alias rib="docker system prune && sudo service docker restart && pip install --upgrade -i https://infrastructure.getbuilt.com/nexus/repository/pypi/simple built-developer-environment && built_up --clean -p inspections"
-alias docs="docker ps --format 'table {{.Names}}\t{{.Command}}\t{{.Status}}'"
-alias ripa="built_service_reset inspections-product-api"
-alias ris="built_service_reset inspections-service"
-alias risd="built_service_reset --include-db inspections-service"
-
-
-
-## inspections api spec ---
-
 # Reset ownership of apispec of inPAPI
 ownership-inspections() {
   sudo chown -R 501:1000 $(make -s get_ownership_files)
@@ -298,3 +323,13 @@ phpDebugFile(){
 ###############
 
 alias rr="~/BuiltSource/inspections-product-api/Makefiles/scripts/rerunner.sh"
+alias mktp-cli="~/BuiltSource/inspections-product-api/Makefiles/scripts/rerunner.sh"
+
+
+
+###############
+# Profiles    #
+###############
+
+alias pau='~/BuiltSource/profile-service/scripts/profile-admin-utils.sh'
+

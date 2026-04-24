@@ -18,9 +18,12 @@ return {
     priority = 80,
     lazy = false,
     config = function()
-      ensure_installed = {
-        "ruby_lsp",
-      }
+      require("mason-lspconfig").setup({
+        ensure_installed = {
+          "ruby_lsp",
+          "gopls",
+        },
+      })
     end,
   },
   {
@@ -83,49 +86,6 @@ return {
       lspconfig.html.setup {
         capabilities = capabilities,
       }
-
-
-
-
-
-
-
-      {
-		"ray-x/go.nvim",
-		ft = { "go", "gomod" },
-		build = ":lua require('go.install').update_all_sync()",
-		dependencies = {
-			"ray-x/guihua.lua",
-			"neovim/nvim-lspconfig",
-			"nvim-treesitter/nvim-treesitter",
-		},
-		config = function()
-			require("go").setup({
-				lsp_cfg = {
-					capabilities = capabilities,
-					settings = {
-						gopls = {
-							analyses = {
-								ST1000 = false,
-							},
-						},
-					},
-				},
-				diagnostic = false,
-				lsp_inlay_hints = { enable = false },
-				lsp_keymaps = false,
-			})
-
-			local grp = vim.api.nvim_create_augroup("GoFormat", { clear = true })
-			vim.api.nvim_create_autocmd("BufWritePre", {
-				pattern = "*.go",
-				group = grp,
-				callback = function()
-					require("go.format").goimports()
-				end,
-			})
-		end,
-	},
 
 
 

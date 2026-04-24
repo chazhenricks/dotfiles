@@ -19,6 +19,7 @@ return {
           eruby = { "htmlbeautifier" },
           html = { "htmlbeautifier" },
           ruby = { "rubocop" },
+          go = { "goimports", "gofumpt" },
           markdown = { "prettierd" },
         },
         formatters = {
@@ -59,6 +60,9 @@ return {
         typescript = { "eslint_d" },
         javascriptreact = { "eslint_d" },
         typescriptreact = { "eslint_d" },
+
+        -- Go
+        go = { "golangcilint" },
 
         -- Ruby development
         ruby = { "rubocop" },

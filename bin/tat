@@ -1,31 +1,241 @@
 #!/bin/sh
 #
-# Attach or create tmux session named the same as current directory
+# tat: Attach or create tmux session named the same as current directory
+#      Optional templates: tat --backend
+
+set -eu
 
 path_name="$(basename "$PWD" | tr . -)"
-session_name=${1-$path_name}
+session_name="$path_name"
+template=""
+
+usage() {
+  cat <<'EOF'
+Usage:
+  tat [session_name]
+  tat --backend [session_name]
+EOF
+}
+
+# --- arg parsing (kept simple, extensible) ---
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -b|--backend)
+      template="backend"
+      shift
+      ;;
+    -bs|--backend-no-split)
+      template="backend_no_split"
+      shift
+      ;;
+    -f|--frontend)
+      template="frontend"
+      shift
+      ;;
+    -fs|--frontend-no-split)
+      template="frontend_no_split"
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --*)
+      echo "Unknown option: $1" >&2
+      usage
+      exit 2
+      ;;
+    *)
+      # first non-flag arg is session name override
+      session_name="$1"
+      shift
+      ;;
+  esac
+done
 
 not_in_tmux() {
-  [ -z "$TMUX" ]
+  [ -z "${TMUX:-}" ]
 }
 
 session_exists() {
-  tmux has-session -t "=$session_name"
+  tmux has-session -t "=$session_name" 2>/dev/null
 }
 
 create_detached_session() {
-    (TMUX='' tmux new-session -Ad -s "$session_name")
-  }
+  # -A: attach if exists, otherwise create
+  # -d: detached
+  (TMUX='' tmux new-session -Ad -s "$session_name" -c "$PWD")
+}
+
+# --- templates ---
+apply_template_backend() {
+  # Assumes session exists already.
+
+  # If you want to avoid clobbering a session that already has windows,
+  # we only apply layout when the session is "fresh" (1 window named like tmux default).
+  # We'll do a safe check: if there is already a window named "code", bail.
+  if tmux list-windows -t "$session_name" -F '#{window_name}' 2>/dev/null | grep -qx "code"; then
+    return 0
+  fi
+
+  # Rename window 1 to "code" and split into two panes
+  tmux rename-window -t "$session_name:1" "code"
+  tmux split-window -t "$session_name:code" -h -b -p 20 -c "$PWD"
+
+  # Create remaining windows
+  tmux new-window -t "$session_name" -n "devspace" -c "$PWD"
+  tmux new-window -t "$session_name" -n "terminal" -c "$PWD"
+  tmux new-window -t "$session_name" -n "k9s" -c "$PWD"
+
+  # Focus code window
+  tmux select-window -t "$session_name:code"
+}
+apply_template_backend_no_split() {
+  # Assumes session exists already.
+
+  # If you want to avoid clobbering a session that already has windows,
+  # we only apply layout when the session is "fresh" (1 window named like tmux default).
+  # We'll do a safe check: if there is already a window named "code", bail.
+  if tmux list-windows -t "$session_name" -F '#{window_name}' 2>/dev/null | grep -qx "code"; then
+    return 0
+  fi
+
+  # Rename window 1 to "code" and split into two panes
+  tmux rename-window -t "$session_name:1" "code"
+
+  # Create remaining windows
+  tmux new-window -t "$session_name" -n "claude" -c "$PWD"
+  tmux new-window -t "$session_name" -n "devspace" -c "$PWD"
+  tmux new-window -t "$session_name" -n "terminal" -c "$PWD"
+  tmux new-window -t "$session_name" -n "k9s" -c "$PWD"
+
+  # Focus code window
+  tmux select-window -t "$session_name:code"
+}
+apply_template_frontend() {
+  # Assumes session exists already.
+
+  # If you want to avoid clobbering a session that already has windows,
+  if tmux list-windows -t "$session_name" -F '#{window_name}' 2>/dev/null | grep -qx "code"; then
+    return 0
+  fi
+
+  # Rename window 1 to "code" 
+  tmux rename-window -t "$session_name:1" "code"
+  tmux split-window -t "$session_name:code" -h -b -p 20 -c "$PWD"
+
+
+  # Create remaining windows
+  tmux new-window -t "$session_name" -n "server" -c "$PWD"
+  tmux new-window -t "$session_name" -n "terminal" -c "$PWD"
+  tmux new-window -t "$session_name" -n "k9s" -c "$PWD"
+
+  # Focus code window
+  tmux select-window -t "$session_name:code"
+}
+apply_template_frontend_no_split() {
+  # Assumes session exists already.
+
+  # If you want to avoid clobbering a session that already has windows,
+  if tmux list-windows -t "$session_name" -F '#{window_name}' 2>/dev/null | grep -qx "code"; then
+    return 0
+  fi
+
+  # Rename window 1 to "code" 
+  tmux rename-window -t "$session_name:1" "code"
+
+
+  # Create remaining windows
+  tmux new-window -t "$session_name" -n "claude" -c "$PWD"
+  tmux new-window -t "$session_name" -n "server" -c "$PWD"
+  tmux new-window -t "$session_name" -n "terminal" -c "$PWD"
+  tmux new-window -t "$session_name" -n "k9s" -c "$PWD"
+
+  # Focus code window
+  tmux select-window -t "$session_name:code"
+}
+
+apply_template() {
+  case "${template:-}" in
+    "" )
+      # default: do nothing
+      ;;
+    backend )
+      apply_template_backend
+      ;;
+    backend_no_split)
+      apply_template_backend_no_split
+      ;;
+    frontend )
+      apply_template_frontend
+      ;;
+    frontend_no_split )
+      apply_template_frontend_no_split
+      ;;
+    * )
+      echo "Unknown template: $template" >&2
+      exit 2
+      ;;
+  esac
+}
 
 create_if_needed_and_attach() {
-    if not_in_tmux; then
-      tmux new-session -As "$session_name"
-    else
-      if ! session-exists; then
-        create_detached_session
-      fi
-      tmux switch-client -t "$session_name"
+  if not_in_tmux; then
+    # outside tmux
+    if ! session_exists; then
+      create_detached_session
+      apply_template
     fi
-  }
+    tmux attach -t "$session_name"
+  else
+    # inside tmux
+    if ! session_exists; then
+      create_detached_session
+      apply_template
+    fi
+    tmux switch-client -t "$session_name"
+  fi
+}
 
 create_if_needed_and_attach
+
+
+
+
+
+
+
+
+# OLD VERSION - keeping in case I need to revert
+# #!/bin/sh
+# #
+# # Attach or create tmux session named the same as current directory
+#
+# path_name="$(basename "$PWD" | tr . -)"
+# session_name=${1-$path_name}
+#
+# not_in_tmux() {
+#   [ -z "$TMUX" ]
+# }
+#
+# session_exists() {
+#   tmux has-session -t "=$session_name"
+# }
+#
+# create_detached_session() {
+#     (TMUX='' tmux new-session -Ad -s "$session_name")
+#   }
+#
+# create_if_needed_and_attach() {
+#     if not_in_tmux; then
+#       tmux new-session -As "$session_name"
+#     else
+#       if ! session-exists; then
+#         create_detached_session
+#       fi
+#       tmux switch-client -t "$session_name"
+#     fi
+#   }
+#
+# create_if_needed_and_attach
+

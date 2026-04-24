@@ -84,6 +84,52 @@ return {
         capabilities = capabilities,
       }
 
+
+
+
+
+
+
+      {
+		"ray-x/go.nvim",
+		ft = { "go", "gomod" },
+		build = ":lua require('go.install').update_all_sync()",
+		dependencies = {
+			"ray-x/guihua.lua",
+			"neovim/nvim-lspconfig",
+			"nvim-treesitter/nvim-treesitter",
+		},
+		config = function()
+			require("go").setup({
+				lsp_cfg = {
+					capabilities = capabilities,
+					settings = {
+						gopls = {
+							analyses = {
+								ST1000 = false,
+							},
+						},
+					},
+				},
+				diagnostic = false,
+				lsp_inlay_hints = { enable = false },
+				lsp_keymaps = false,
+			})
+
+			local grp = vim.api.nvim_create_augroup("GoFormat", { clear = true })
+			vim.api.nvim_create_autocmd("BufWritePre", {
+				pattern = "*.go",
+				group = grp,
+				callback = function()
+					require("go.format").goimports()
+				end,
+			})
+		end,
+	},
+
+
+
+
       --auto close after quickfix file has been selected
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "qf",

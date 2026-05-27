@@ -32,10 +32,10 @@ return {
       end
       for _, line in ipairs(lines) do
         if
-          line:find("%f[%a]import%s+pytest%f[%A]") or
-          line:find("%f[%a]from%s+pytest%s+import%f[%A]") or
-          line:find("@%s*pytest%.") or
-          line:find("%f[%a]pytest%.")
+          line:find "%f[%a]import%s+pytest%f[%A]"
+          or line:find "%f[%a]from%s+pytest%s+import%f[%A]"
+          or line:find "@%s*pytest%."
+          or line:find "%f[%a]pytest%."
         then
           return true
         end
@@ -201,10 +201,58 @@ return {
       return "jest"
     end
 
+    -- ruby/rails tests
+    vim.g["test#ruby#rspec#file_pattern"] = "\\v(_spec\\.rb$)"
+    vim.g["test#ruby#minitest#file_pattern"] = "\\v(_test\\.rb$|test_.*\\.rb$)"
+
+    local function find_gemfile(start_dir)
+      if vim.fs and vim.fs.find then
+        local hits = vim.fs.find("Gemfile", { upward = true, path = start_dir })
+        return hits and hits[1] or nil
+      else
+        local found = vim.fn.findfile("Gemfile", start_dir .. ";")
+        return found ~= "" and found or nil
+      end
+    end
+
+    local function detect_ruby_runner_from_gemfile(gemfile_path)
+      local raw = read_file(gemfile_path)
+      if not raw then
+        return nil
+      end
+      if raw:find "rspec%-rails" or raw:find "rspec%-core" then
+        return "rspec"
+      end
+      if raw:find "minitest" then
+        return "minitest"
+      end
+      return nil
+    end
+
+    local function get_dynamic_ruby_runner()
+      local buf_dir = vim.fn.expand "%:p:h"
+      if buf_dir == "" then
+        buf_dir = vim.fn.getcwd()
+      end
+      local gemfile = find_gemfile(buf_dir)
+      if gemfile then
+        local runner = detect_ruby_runner_from_gemfile(gemfile)
+        if runner then
+          return runner
+        end
+      end
+      -- rspec is by far the rails defualt
+      return "rspec"
+    end
+
     local function run_test_with_dynamic_runner(test_cmd)
       local ft = vim.bo.filetype
       if ft == "python" then
         vim.g["test#python#runner"] = get_dynamic_python_runner()
+      elseif ft == "ruby" then
+        vim.g["test#ruby#runner"] = get_dynamic_ruby_runner()
+      elseif ft == "go" then
+        -- vim-test handles Go natively via gotest
       else
         local runner = get_dynamic_runner()
         vim.g["test#javascript#runner"] = runner

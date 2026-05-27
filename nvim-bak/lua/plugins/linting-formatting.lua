@@ -19,6 +19,7 @@ return {
           eruby = { "htmlbeautifier" },
           html = { "htmlbeautifier" },
           ruby = { "rubocop" },
+          go = { "goimports", "gofumpt" },
           markdown = { "prettierd" },
         },
         formatters = {
@@ -60,6 +61,9 @@ return {
         javascriptreact = { "eslint_d" },
         typescriptreact = { "eslint_d" },
 
+        -- Go
+        go = { "golangcilint" },
+
         -- Ruby development
         ruby = { "rubocop" },
         eruby = { "erb_lint" },
@@ -74,7 +78,8 @@ return {
         "$FILENAME",
       }
 
-      lint.linters.eslint.args = {
+      -- Args must be set on eslint_d (the linter actually used), not eslint
+      lint.linters.eslint_d.args = {
         "--format",
         "json",
         "--stdin",
@@ -82,10 +87,31 @@ return {
         "$FILENAME",
       }
 
-      -- Set up lint on save
+      -- Find monorepo/project root so eslint_d's cwd has access to root node_modules
+      -- (fixes "Cannot find package ... @my-etsy/eslint-config" when buffer is in a subdir)
+      local function find_lint_root()
+        local path = vim.api.nvim_buf_get_name(0)
+        if path == "" then return nil end
+        local dir = vim.fn.fnamemodify(path, ":p:h")
+        while dir ~= nil and dir ~= "" and dir ~= "/" do
+          if vim.fn.isdirectory(dir .. "/node_modules/@my-etsy/eslint-config") == 1 then
+            return dir
+          end
+          if vim.fn.filereadable(dir .. "/pnpm-workspace.yaml") == 1 then
+            return dir
+          end
+          local parent = vim.fn.fnamemodify(dir, ":h")
+          if parent == dir then break end
+          dir = parent
+        end
+        return nil
+      end
+
+      -- Set up lint on save; run eslint_d from project root so shared config resolves
       vim.api.nvim_create_autocmd({ "BufWritePost" }, {
         callback = function()
-          require("lint").try_lint()
+          local root = find_lint_root()
+          require("lint").try_lint(nil, root and { cwd = root } or {})
         end,
       })
     end,

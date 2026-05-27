@@ -11,9 +11,6 @@ return {
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      vim.keymap.set("n", "<leader>tb", "<cmd>GoTestFunc -bench<CR>", { desc = "Go benchmark under cursor" })
-      vim.keymap.set("n", "<leader>Tb", "<cmd>GoTestFile -bench<CR>", { desc = "Go benchmark file" })
-
       require("go").setup({
         lsp_cfg = {
           capabilities = capabilities,
@@ -28,6 +25,7 @@ return {
             },
           },
         },
+        lsp_codelens = false,
         lsp_inlay_hints = { enable = false },
         lsp_keymaps = false,
         luasnip = true,

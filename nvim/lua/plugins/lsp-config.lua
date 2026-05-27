@@ -18,12 +18,12 @@ return {
     priority = 80,
     lazy = false,
     config = function()
-      require("mason-lspconfig").setup({
+      require("mason-lspconfig").setup {
         ensure_installed = {
-          "ruby_lsp",
           "gopls",
+          "ruby_lsp",
         },
-      })
+      }
     end,
   },
   {
@@ -32,27 +32,17 @@ return {
     priority = 90,
     dependencies = { "hrsh7th/cmp-nvim-lsp" },
     config = function()
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      vim.lsp.config("*", {
+        capabilities = require("cmp_nvim_lsp").default_capabilities(),
+      })
 
-      local lspconfig = require "lspconfig"
-      -- ruby
-      lspconfig.ruby_lsp.setup {
-        capabilities = capabilities,
-      }
+      vim.lsp.config("ts_ls", {})
 
-      --typescript
-      lspconfig.ts_ls.setup {
-        capabilities = capabilities,
-      }
-
-      --python
-      lspconfig.basedpyright.setup {
-        capabilities = capabilities,
+      vim.lsp.config("basedpyright", {
         before_init = function(_, config)
           local cwd = vim.fn.getcwd()
           local dir_name = vim.fn.fnamemodify(cwd, ":t")
 
-          --common venv locations
           local venv_paths = {
             cwd .. "/.venv/bin/python",
             cwd .. "/venv/bin/python",
@@ -77,24 +67,19 @@ return {
             },
           },
           python = {
-            pythonPath = "python3", --fallback default
+            pythonPath = "python3",
           },
         },
-      }
+      })
 
-      --html
-      lspconfig.html.setup {
-        capabilities = capabilities,
-      }
+      vim.lsp.config("html", {})
+      vim.lsp.config("ruby_lsp", {})
 
+      vim.lsp.enable { "ts_ls", "basedpyright", "html", "ruby_lsp" }
 
-
-
-      --auto close after quickfix file has been selected
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "qf",
         callback = function()
-          -- In the qf/loclist window: Enter = jump, then close the window
           vim.cmd [[
       nnoremap <buffer> <CR> <CR>:cclose<Bar>lclose<CR>
     ]]

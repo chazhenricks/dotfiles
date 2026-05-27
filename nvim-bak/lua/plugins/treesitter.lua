@@ -13,6 +13,10 @@ return {
         ensure_installed = {
           "bash",
           "embedded_template",
+          "go",
+          "gomod",
+          "gosum",
+          "gowork",
           "html",
           "javascript",
           "json",

@@ -21,6 +21,7 @@ return {
           ruby = { "rubocop" },
           go = { "goimports", "gofumpt" },
           markdown = { "prettierd" },
+          yaml = { "prettierd", "prettier", stop_after_first = true },
         },
         formatters = {
           stylua = {
@@ -91,7 +92,9 @@ return {
       -- (fixes "Cannot find package ... @my-etsy/eslint-config" when buffer is in a subdir)
       local function find_lint_root()
         local path = vim.api.nvim_buf_get_name(0)
-        if path == "" then return nil end
+        if path == "" then
+          return nil
+        end
         local dir = vim.fn.fnamemodify(path, ":p:h")
         while dir ~= nil and dir ~= "" and dir ~= "/" do
           if vim.fn.isdirectory(dir .. "/node_modules/@my-etsy/eslint-config") == 1 then
@@ -101,7 +104,9 @@ return {
             return dir
           end
           local parent = vim.fn.fnamemodify(dir, ":h")
-          if parent == dir then break end
+          if parent == dir then
+            break
+          end
           dir = parent
         end
         return nil

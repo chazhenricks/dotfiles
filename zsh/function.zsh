@@ -23,6 +23,11 @@ sz () {
   config commit -m "update zshrc"
 }
 
+# source all panes in a tmux session
+tzsh() {
+  tmux list-panes -s -F '#{pane_id}' | xargs -I {} tmux send-keys -t {} 'source ~/.zshrc' Enter
+}
+
 export_envs () {
   export $(grep -v '^#' .env.local | xargs)
 }
@@ -61,6 +66,22 @@ replace_origin() {
   git reset --hard origin/$1
 }
 
+
+k8s_auth(){
+  make k8s.search_v2.reindex.auth_tenants
+  make k8s.search_v2.reindex.auth_roles
+  make k8s.search_v2.reindex.auth_groups
+  make k8s.search_v2.reindex.auth_users
+}
+
+
+dev_k9s(){
+  kubectl config use-context arn:aws:eks:us-east-1:833816692833:cluster/dev
+}
+
+chaz_k9s(){
+  kubectl config use-context workstation 
+}
 
 copy_password(){
 

@@ -55,6 +55,9 @@ vim.g.loaded_netrwPlugin = 1
 
 vim.loader.enable()
 
+-- dont pause on -- More --
+vim.opt.more = false
+
 ----------------------------------
 --- make python spaces not shitty
 ----------------------------------

@@ -9,6 +9,9 @@ export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export PATH=$HOME/bin:/opt/homebrew/bin:/usr/local/bin:$PATH
 
 
+# Add dotfiles/bin to path so shared scripts can run anywhere
+export PATH="/Users/chaz.henricks/dotfiles/bin:$PATH"
+
 # Add .local/bin to path so we can execute custom scripts
 export PATH=$PATH:$HOME/.local/bin 
 

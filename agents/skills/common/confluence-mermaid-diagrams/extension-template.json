@@ -1,0 +1,75 @@
+{
+  "type": "extension",
+  "attrs": {
+    "layout": "default",
+    "extensionType": "com.atlassian.ecosystem",
+    "extensionKey": "23392b90-4271-4239-98ca-a3e96c663cbb/63d4d207-ac2f-4273-865c-0240d37f044a/static/mermaid-diagram",
+    "text": "Mermaid diagram",
+    "parameters": {
+      "layout": "extension",
+      "guestParams": {
+        "index": INDEX
+      },
+      "forgeEnvironment": "PRODUCTION",
+      "extensionProperties": {
+        "accountId": "ACCOUNT_ID",
+        "extension": {
+          "appVersion": "2.47.0",
+          "environmentType": "PRODUCTION",
+          "dataClassificationPolicyDecision": {
+            "status": "ALLOWED"
+          },
+          "type": "xen:macro",
+          "environmentKey": "production",
+          "egress": [],
+          "environmentId": "63d4d207-ac2f-4273-865c-0240d37f044a",
+          "appId": "23392b90-4271-4239-98ca-a3e96c663cbb",
+          "id": "ari:cloud:ecosystem::extension/23392b90-4271-4239-98ca-a3e96c663cbb/63d4d207-ac2f-4273-865c-0240d37f044a/static/mermaid-diagram",
+          "installationId": "2a0dbb45-2029-4f7f-9be9-f31860c41d55",
+          "scopes": [
+            "read:page:confluence"
+          ],
+          "key": "mermaid-diagram",
+          "properties": {
+            "resourceUploadId": "42a4c372-3f84-4a04-a465-bad769c3e441",
+            "resource": "custom-ui",
+            "icon": "https://icon.cdn.prod.atlassian-dev.net/23392b90-4271-4239-98ca-a3e96c663cbb/63d4d207-ac2f-4273-865c-0240d37f044a/42a4c372-3f84-4a04-a465-bad769c3e441/icons/app-icon.png",
+            "description": "Render a Mermaid diagram from a code block on a page",
+            "categories": [
+              "confluence-content",
+              "development",
+              "formatting",
+              "visuals"
+            ],
+            "title": "Mermaid diagram",
+            "type": "xen:macro",
+            "config": {
+              "resource": "macro-config",
+              "viewportSize": "small",
+              "title": "Mermaid diagram configuration",
+              "render": "native"
+            },
+            "key": "mermaid-diagram"
+          }
+        },
+        "cloudId": "53d14180-dd0d-4a76-9ea7-b12222e9cf92",
+        "contextIds": [
+          "ari:cloud:confluence:53d14180-dd0d-4a76-9ea7-b12222e9cf92:workspace/9af25fdc-3a8f-4935-8ebe-458f6d4af011"
+        ],
+        "extensionData": {
+          "type": "macro",
+          "content": {
+            "id": "PAGE_ID",
+            "type": "page"
+          },
+          "space": {
+            "id": "SPACE_ID",
+            "key": "SPACE_KEY"
+          }
+        }
+      },
+      "extensionId": "ari:cloud:ecosystem::extension/23392b90-4271-4239-98ca-a3e96c663cbb/63d4d207-ac2f-4273-865c-0240d37f044a/static/mermaid-diagram",
+      "extensionTitle": "Mermaid diagram"
+    }
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Built Local Package Linking"
+  short_description: "Override local Built packages in MFEs with yalc"
+  default_prompt: "Use $built-local-package-linking to add, push, or remove a local Built package override with yalc, defaulting to the built-fe-shared marketplace-ui to purchase-orders-miniapp workflow when it matches."

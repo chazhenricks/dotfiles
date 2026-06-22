@@ -201,6 +201,13 @@ return {
       return "jest"
     end
 
+    --- -----------------------------
+    --- Elixir options
+    --- -----------------------------
+    vim.g["test#elixir#exunit#file_pattern"] = "\\v(_test\\.exs$)"
+    -- mix test is the default; explicit for clarity
+    vim.g["test#elixir#exunit#executable"] = "mix test"
+
     -- ruby/rails tests
     vim.g["test#ruby#rspec#file_pattern"] = "\\v(_spec\\.rb$)"
     vim.g["test#ruby#minitest#file_pattern"] = "\\v(_test\\.rb$|test_.*\\.rb$)"
@@ -253,6 +260,8 @@ return {
         vim.g["test#ruby#runner"] = get_dynamic_ruby_runner()
       elseif ft == "go" then
         -- vim-test handles Go natively via gotest
+      elseif ft == "elixir" then
+        -- vim-test handles Elixir natively via exunit/mix test
       else
         local runner = get_dynamic_runner()
         vim.g["test#javascript#runner"] = runner

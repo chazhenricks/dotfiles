@@ -8,10 +8,14 @@ return {
       require("nvim-treesitter").install({
         "bash",
         "embedded_template",
+        "elixir",
+        "eex",
+        "erlang",
         "go",
         "gomod",
         "gosum",
         "gowork",
+        "heex",
         "html",
         "javascript",
         "json",
@@ -29,10 +33,10 @@ return {
 
       vim.api.nvim_create_autocmd("FileType", {
         pattern = {
-          "bash", "sh", "embedded_template", "go", "gomod", "gosum", "gowork",
-          "html", "javascript", "javascriptreact", "json", "lua", "markdown",
-          "python", "query", "regex", "ruby", "tsx", "typescript",
-          "typescriptreact", "vim", "yaml",
+          "bash", "sh", "embedded_template", "elixir", "eex", "erlang", "go",
+          "gomod", "gosum", "gowork", "heex", "html", "javascript",
+          "javascriptreact", "json", "lua", "markdown", "python", "query",
+          "regex", "ruby", "tsx", "typescript", "typescriptreact", "vim", "yaml",
         },
         callback = function()
           vim.treesitter.start()

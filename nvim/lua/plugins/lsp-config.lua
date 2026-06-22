@@ -22,6 +22,8 @@ return {
         ensure_installed = {
           "gopls",
           "ruby_lsp",
+          "elixirls",
+          -- erlangls built from main branch manually (1.1.0 incompatible with OTP 29)
         },
       }
     end,
@@ -74,8 +76,8 @@ return {
 
       vim.lsp.config("html", {})
       vim.lsp.config("ruby_lsp", {})
-
-      vim.lsp.enable { "ts_ls", "basedpyright", "html", "ruby_lsp" }
+      vim.lsp.config("elixirls", {})
+      vim.lsp.enable { "ts_ls", "basedpyright", "html", "ruby_lsp", "elixirls" }
 
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "qf",

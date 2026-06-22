@@ -1,0 +1,4 @@
+interface:
+  display_name: "Built Local K8s Repair"
+  short_description: "Repair local k8s search and event plumbing"
+  default_prompt: "Use $built-local-k8s-repair to repair my local Built k8s dev environment, search indexes, portfolio data, DMS, Kafka, and Lambda plumbing."

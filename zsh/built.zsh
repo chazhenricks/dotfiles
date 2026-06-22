@@ -23,7 +23,7 @@ export ELASTICSEARCH_URL="chahen.workstation.getbuilt.com/elasticsearch"
 # start kubernetes dev environment 
 k8s_yesterday(){
     assume
-    AWS_PROFILE=built_dev_eks/BuiltAdmin aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 833816692833.dkr.ecr.us-east-1.amazonaws.com
+    aws sso login
     make start_day
 }
 

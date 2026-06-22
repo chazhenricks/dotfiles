@@ -1,3 +1,8 @@
+-- ensure homebrew + mise tools are visible to Mason's subprocess bash
+vim.env.PATH = "/opt/homebrew/bin:"
+  .. vim.fn.expand "~/.local/share/mise/shims:"
+  .. vim.env.PATH
+
 -- -------------------------------------------------------
 -- Init lazyvim, setup path, and download if not installed
 -- -------------------------------------------------------

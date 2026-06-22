@@ -1,0 +1,83 @@
+#!/bin/zsh
+set -euo pipefail
+
+SKILL_SCRIPT_DIR="${BUILT_LOCAL_K8S_REPAIR_SCRIPT_DIR:-/Users/chaz.henricks/.agent-skills/built-local-k8s-repair/scripts}"
+WITH_HELM="false"
+REPAIR_PORTFOLIO="false"
+CHECK_ONLY="false"
+SKIP_GIT="false"
+
+usage() {
+  cat <<USAGE
+Usage: k8s_daily [--with-helm] [--repair-portfolio] [--check-only] [--skip-git]
+
+Daily safe startup for Chaz's local Built k8s environment.
+
+Default behavior:
+  1. Keep the machine awake while the script runs.
+  2. Update single-stack main -> chaz.
+  3. Run k8s_yesterday, falling back to bdev k8s start-day.
+  4. Wait for pods.
+  5. Run make health namespace=chahen.
+  6. Run the local k8s health check.
+
+Options:
+  --with-helm          Also run helmfile deps and helmfile apply --set dms.enabled=true.
+  --repair-portfolio   Run the portfolio search repair after startup.
+  --check-only         Only run the health check; do not start/update anything.
+  --skip-git           Do not update/merge single-stack branches first.
+
+Environment overrides:
+  K8S_NAMESPACE / NS                  Namespace, default: chahen
+  AWS_PROFILE                         AWS profile, default: built_dev_eks/BuiltEksDev
+  STACK_DIR                           Stack repo path
+  BUILT_LOCAL_K8S_REPAIR_SCRIPT_DIR   Override skill script directory
+USAGE
+}
+
+for arg in "$@"; do
+  case "$arg" in
+    --help|-h)
+      usage
+      exit 0
+      ;;
+    --with-helm)
+      WITH_HELM="true"
+      ;;
+    --repair-portfolio)
+      REPAIR_PORTFOLIO="true"
+      ;;
+    --check-only)
+      CHECK_ONLY="true"
+      ;;
+    --skip-git)
+      SKIP_GIT="true"
+      ;;
+    *)
+      echo "Unknown argument: $arg" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+done
+
+if [[ "$CHECK_ONLY" == "true" ]]; then
+  "$SKILL_SCRIPT_DIR/local_k8s_check.zsh"
+  exit 0
+fi
+
+repair_args=(--start-day --check --caffeinate)
+
+if [[ "$WITH_HELM" != "true" ]]; then
+  repair_args+=(--skip-helm)
+fi
+
+if [[ "$SKIP_GIT" == "true" ]]; then
+  repair_args+=(--skip-git)
+fi
+
+"$SKILL_SCRIPT_DIR/local_k8s_repair.zsh" "${repair_args[@]}"
+
+if [[ "$REPAIR_PORTFOLIO" == "true" ]]; then
+  "$SKILL_SCRIPT_DIR/portfolio_repair.zsh"
+fi

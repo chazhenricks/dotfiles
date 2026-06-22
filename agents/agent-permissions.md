@@ -63,18 +63,14 @@ The `agent-permissions` script reads only the fenced `json` block below and maps
     ]
   },
   "writeTools": {
-    "claudeAsk": [
-      "Edit",
-      "Write",
-      "MultiEdit",
-      "NotebookEdit"
-    ]
+    "claudeAsk": ["Edit", "Write", "MultiEdit", "NotebookEdit"]
   },
   "readCommandPrefixes": [
     ["pwd"],
     ["ls"],
     ["cat"],
     ["find"],
+    ["sed"],
     ["head"],
     ["tail"],
     ["wc"],
@@ -125,7 +121,6 @@ The `agent-permissions` script reads only the fenced `json` block below and maps
     ["chown"],
     ["ln"],
     ["tee"],
-    ["sed"],
     ["perl"],
     ["python"],
     ["python3"],

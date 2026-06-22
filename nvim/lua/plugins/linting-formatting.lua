@@ -20,6 +20,10 @@ return {
           html = { "htmlbeautifier" },
           ruby = { "rubocop" },
           go = { "goimports", "gofumpt" },
+          elixir = { "mix" },
+          eex = { "mix" },
+          heex = { "mix" },
+          erlang = { "erlfmt" },
           markdown = { "prettierd" },
           yaml = { "prettierd", "prettier", stop_after_first = true },
         },
@@ -68,6 +72,9 @@ return {
         -- Ruby development
         ruby = { "rubocop" },
         eruby = { "erb_lint" },
+
+        -- Elixir
+        elixir = { "credo" },
       }
 
       -- Configure specific linters
